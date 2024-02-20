@@ -28,6 +28,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          cd backend 
           pip install -r requirements.txt
       
       # Example: Run Flask unit tests
@@ -52,12 +53,12 @@ jobs:
       
       - name: Install dependencies
         run: |
-          cd frontend # Change to your React project's directory
+          cd frontend 
           npm install
       
       #- name: Build React app
        # run: |
-         # cd frontend # Change to your React project's directory
+         # cd frontend 
          # npm run build
       
       # Example: Run React tests
