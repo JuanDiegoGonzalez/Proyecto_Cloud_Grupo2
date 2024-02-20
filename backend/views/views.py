@@ -29,7 +29,7 @@ class VistaSignUp(Resource):
 
 class VistaLogIn(Resource):
     def post(self):
-        usuario = Usuario.query.filter(Usuario.username == request.json["username"], Usuario.password == request.json["password"]).first()
+        usuario = Usuario.query.filter(Usuario.email == request.json["email"], Usuario.password == request.json["password"]).first()
         db.session.commit()
         if usuario is None:
             return {"error":"El usuario no existe"}
@@ -51,9 +51,11 @@ class VistaTareas(Resource):
     @jwt_required()
     def post(self):
         usuario = Usuario.query.filter(Usuario.email == get_jwt_identity()).first()
+        oldFormat = request.json['fileName'].split(".")[-1]
         nueva_tarea = Tarea(fileName=request.json['fileName'],
+                            oldFormat=oldFormat,
                             newFormat=request.json['newFormat'],
-                            timeStamp=datetime.today().date(),
+                            timeStamp=datetime.today(),
                             status="UPLOADED",
                             id_usuario=usuario.id)
         db.session.add(nueva_tarea)
@@ -77,4 +79,6 @@ class VistaTarea(Resource):
         tarea = Tarea.query.get_or_404(id_task)
         db.session.delete(tarea)
         db.session.commit()
+        if tarea.status == "PROCESSED":
+            ...  # TODO
         return 'Operacion exitosa', 204

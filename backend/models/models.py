@@ -7,9 +7,9 @@ db = SQLAlchemy()
 
 class Usuario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(128))
-    password = db.Column(db.String(128))
-    email = db.Column(db.String(128), unique=True)
+    username = db.Column(db.String(64))
+    password = db.Column(db.String(32))
+    email = db.Column(db.String(64), unique=True)
     tareas = db.relationship('Tarea', cascade='all, delete, delete-orphan')
 
 class Estado(enum.Enum):
@@ -18,8 +18,9 @@ class Estado(enum.Enum):
 
 class Tarea(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    fileName = db.Column(db.String(128))
-    newFormat = db.Column(db.String(128))
+    fileName = db.Column(db.String(256))
+    oldFormat = db.Column(db.String(64))
+    newFormat = db.Column(db.String(64))
     timeStamp = db.Column(db.Date)
     status = db.Column(db.Enum(Estado))
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'))

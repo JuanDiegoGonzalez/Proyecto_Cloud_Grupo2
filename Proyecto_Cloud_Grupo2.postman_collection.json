@@ -182,7 +182,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"BrendaUsuarioInexistente\",\r\n    \"password\":\"password\"\r\n}",
+							"raw": "{\r\n    \"email\": \"brendausuarioinexistente@gmail.com\",\r\n    \"password\":\"password\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -248,7 +248,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"Brenda\",\r\n    \"password\":\"password\"\r\n}",
+							"raw": "{\r\n    \"email\": \"brenda@gmail.com\",\r\n    \"password\":\"password\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -453,7 +453,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"fileName\": \"prueba.txt\",\r\n    \"newFormat\": \"PDF\"\r\n}",
+							"raw": "{\r\n    \"fileName\": \"prueba.txt\",\r\n    \"newFormat\": \"pdf\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -611,51 +611,6 @@
 					"response": []
 				},
 				{
-					"name": "Delete Tarea",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 204\", function () {\r",
-									"    pm.response.to.have.status(204);\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token_de_acceso}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{ip}}:{{puerto}}/api/tasks/{{id_tarea}}/",
-							"host": [
-								"{{ip}}"
-							],
-							"port": "{{puerto}}",
-							"path": [
-								"api",
-								"tasks",
-								"{{id_tarea}}",
-								""
-							]
-						},
-						"description": "Elimina una tarea con un id existente en la aplicación."
-					},
-					"response": []
-				},
-				{
 					"name": "Delete Unexistent Tarea",
 					"event": [
 						{
@@ -697,6 +652,51 @@
 							]
 						},
 						"description": "Elimina una tarea con un id inexistente. No se elimina nada en la aplicación."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Tarea",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_de_acceso}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/tasks/{{id_tarea}}/",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"tasks",
+								"{{id_tarea}}",
+								""
+							]
+						},
+						"description": "Elimina una tarea con un id existente en la aplicación."
 					},
 					"response": []
 				},
