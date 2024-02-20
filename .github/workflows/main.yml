@@ -1,0 +1,68 @@
+name: Feature Development Build
+
+on:
+  push:
+    branches-ignore: 
+      - development
+      - staging
+      - production
+      - release
+  workflow_dispatch:
+
+jobs:
+  backend-build:
+    runs-on: ubuntu-latest
+    environment: Development
+    strategy:
+      matrix:
+        python-version: [3.10.13, 3.12.2]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          cd backend 
+          pip install -r requirements.txt
+      
+      # Example: Run Flask unit tests
+     # - name: Run tests
+       # run: |
+          # Add command to run your tests, e.g., pytest
+          #echo "Running Flask backend tests..."
+          # pytest tests/
+
+  frontend-build:
+    needs: backend-build
+    runs-on: ubuntu-latest
+    environment: Development
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      
+      - name: Set up Node.js (using LTS version)
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: |
+          cd frontend 
+          npm install
+      
+      #- name: Build React app
+       # run: |
+         # cd frontend 
+         # npm run build
+      
+      # Example: Run React tests
+      #- name: Run tests
+       # run: |
+         # cd frontend # Change to your React project's directory
+         # npm test
