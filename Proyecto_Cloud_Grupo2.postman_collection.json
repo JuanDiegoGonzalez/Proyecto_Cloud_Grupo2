@@ -1,0 +1,752 @@
+{
+	"info": {
+		"_postman_id": "a8ef5aa1-e35b-4a22-8e6d-44fbdd64ec4c",
+		"name": "Proyecto_Cloud_Grupo2",
+		"description": "Conjunto de pruebas para el Proyecto 0 del curso. Creado por Juan Diego Gonzalez Gomez.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12464767"
+	},
+	"item": [
+		{
+			"name": "Usuario",
+			"item": [
+				{
+					"name": "Create Usuario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Brenda\",\r\n    \"password1\": \"password\",\r\n    \"password2\": \"password\",\r\n    \"email\": \"brenda@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/auth/signup/",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"auth",
+								"signup",
+								""
+							]
+						},
+						"description": "Prueba el registro de un usuario en la aplicación. Se debe crear el usuario en la aplicación."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Usuario Ya Existente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"La respuesta debe tener la propiedad error\", function () {\r",
+									"    var responseBody = pm.response.json();\r",
+									"    pm.expect(responseBody).to.have.property('error');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Brenda\",\r\n    \"password1\": \"password\",\r\n    \"password2\": \"password\",\r\n    \"email\": \"brenda@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/auth/signup/",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"auth",
+								"signup",
+								""
+							]
+						},
+						"description": "Prueba el registro de un usuario en la aplicación con un nombre de usuario ya existente. No se debe crear el usuario en la aplicación."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Usuario Contrasenias no coinciden",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"La respuesta debe tener la propiedad error\", function () {\r",
+									"    var responseBody = pm.response.json();\r",
+									"    pm.expect(responseBody).to.have.property('error');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Brenda\",\r\n    \"password1\": \"password1\",\r\n    \"password2\": \"password2\",\r\n    \"email\": \"brendacontraseniasnocoinciden@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/auth/signup/",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"auth",
+								"signup",
+								""
+							]
+						},
+						"description": "Prueba el registro de un usuario en la aplicación con un nombre de usuario ya existente. No se debe crear el usuario en la aplicación."
+					},
+					"response": []
+				},
+				{
+					"name": "Login Unexistent Usuario",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"id_usuario\", null);\r",
+									"pm.environment.set(\"token_de_acceso\", null);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"La variable de entorno Token deberia ser nula antes del login\", function () {\r",
+									"    var token_antes_del_login = pm.environment.get('token_de_acceso');\r",
+									"    pm.expect(token_antes_del_login).to.be.null;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La respuesta debe tener la propiedad error\", function () {\r",
+									"    var responseBody = pm.response.json();\r",
+									"    pm.expect(responseBody).to.have.property('error');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"BrendaUsuarioInexistente\",\r\n    \"password\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/auth/login/",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"auth",
+								"login",
+								""
+							]
+						},
+						"description": "Prueba el inicio de sesión en la aplicación con credenciales inválidas. No se debe obtener el token de acceso."
+					},
+					"response": []
+				},
+				{
+					"name": "Login Usuario",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"id_usuario\", null);\r",
+									"pm.environment.set(\"token_de_acceso\", null);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"La variable de entorno Token deberia ser nula antes del login\", function () {\r",
+									"    var token_antes_del_login = pm.environment.get('token_de_acceso');\r",
+									"    pm.expect(token_antes_del_login).to.be.null;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var id_usuario = parseInt(pm.response.json().usuario.id, 10);\r",
+									"pm.environment.set(\"id_usuario\", id_usuario);\r",
+									"pm.environment.set(\"id_usuario_no_existente\", id_usuario+1000000);\r",
+									"\r",
+									"var token_de_acceso = pm.response.json().token_de_acceso\r",
+									"pm.environment.set(\"token_de_acceso\", token_de_acceso);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Brenda\",\r\n    \"password\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/auth/login/",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"auth",
+								"login",
+								""
+							]
+						},
+						"description": "Prueba el inicio de sesión en la aplicación con credenciales válidas. Se debe obtener el token de acceso."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Usuario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_de_acceso}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/usuarios/{{id_usuario}}/",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"usuarios",
+								"{{id_usuario}}",
+								""
+							]
+						},
+						"description": "Elimina un usuario con un id existente en la aplicación."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Unexistent Usuario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_de_acceso}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/usuarios/{{id_usuario_no_existente}}/",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"usuarios",
+								"{{id_usuario_no_existente}}",
+								""
+							]
+						},
+						"description": "Elimina un usuario con un id inexistente. No se elimina nada en la aplicación."
+					},
+					"response": []
+				}
+			],
+			"description": "Pruebas para Usuario."
+		},
+		{
+			"name": "Tarea",
+			"item": [
+				{
+					"name": "Create Usuario For Tarea Test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var id_usuario = parseInt(pm.response.json().usuario.id, 10);\r",
+									"pm.environment.set(\"id_usuario\", id_usuario);\r",
+									"pm.environment.set(\"id_usuario_no_existente\", id_usuario+1000000);\r",
+									"\r",
+									"var token_de_acceso = pm.response.json().token_de_acceso\r",
+									"pm.environment.set(\"token_de_acceso\", token_de_acceso);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Brenda\",\r\n    \"password1\": \"password\",\r\n    \"password2\": \"password\",\r\n    \"email\": \"brenda@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/auth/signup/",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"auth",
+								"signup",
+								""
+							]
+						},
+						"description": "Crea un usuario para las pruebas de Tarea."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Tarea",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var id_task = parseInt(pm.response.json().id, 10);\r",
+									"pm.environment.set(\"id_task\", id_task);\r",
+									"pm.environment.set(\"id_task_no_existente\", id_task+1000000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_de_acceso}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fileName\": \"prueba.txt\",\r\n    \"newFormat\": \"PDF\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/tasks/",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Crea una tarea en la aplicación."
+					},
+					"response": []
+				},
+				{
+					"name": "List Tareas Of Usuario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_de_acceso}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/tasks/",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Busca las tareas de un usuario según su id."
+					},
+					"response": []
+				},
+				{
+					"name": "List Tarea",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_de_acceso}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/tasks/{{id_task}}/",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"tasks",
+								"{{id_task}}",
+								""
+							]
+						},
+						"description": "Busca una tarea con un id existente en la aplicación."
+					},
+					"response": []
+				},
+				{
+					"name": "List Unexistent Tarea",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_de_acceso}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/tareas/{{id_tarea_no_existente}}/",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"tareas",
+								"{{id_tarea_no_existente}}",
+								""
+							]
+						},
+						"description": "Busca una tarea con un id inexistente."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Tarea",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_de_acceso}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/tasks/{{id_tarea}}/",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"tasks",
+								"{{id_tarea}}",
+								""
+							]
+						},
+						"description": "Elimina una tarea con un id existente en la aplicación."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Unexistent Tarea",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_de_acceso}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/tasks/{{id_tarea_no_existente}}/",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"tasks",
+								"{{id_tarea_no_existente}}",
+								""
+							]
+						},
+						"description": "Elimina una tarea con un id inexistente. No se elimina nada en la aplicación."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Usuario For Tarea Test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_de_acceso}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/usuarios/{{id_usuario}}/",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"usuarios",
+								"{{id_usuario}}",
+								""
+							]
+						},
+						"description": "Se elimina el usuario creado para las pruebas de Tarea."
+					},
+					"response": []
+				}
+			],
+			"description": "Pruebas para Tarea."
+		}
+	]
+}

@@ -1,5 +1,5 @@
 from backend import create_app
-from backend.views.views import VistaLogIn, VistaSignUp, VistaTareasUsuario
+from backend.views.views import VistaLogIn, VistaSignUp, VistaUsuario, VistaTareasUsuario
 from .models import db
 from flask_restful import Api
 from .views import VistaTareas, VistaTarea
@@ -17,9 +17,10 @@ cors = CORS(app)
 
 api = Api(app)
 api.add_resource(VistaSignUp, '/api/auth/signup/')
-api.add_resource(VistaLogIn, 'api/auth/login/')
+api.add_resource(VistaLogIn, '/api/auth/login/')
+api.add_resource(VistaUsuario, '/api/usuarios/<int:id_usuario>/')
 api.add_resource(VistaTareasUsuario, '/api/tasks/')
-api.add_resource(VistaTareas, 'api/tasks/')
-api.add_resource(VistaTarea, 'api/tasks/<int:id_task>/')
+api.add_resource(VistaTareas, '/api/tasks/')
+api.add_resource(VistaTarea, '/api/tasks/<int:id_task>/')
 
 jwt = JWTManager(app)

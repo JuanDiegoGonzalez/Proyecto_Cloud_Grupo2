@@ -14,15 +14,18 @@ class VistaSignUp(Resource):
         if yaExisteElUsuario:
             return {'error': 'Ya existe el usuario'}
         else:
-            nuevo_usuario = Usuario(username=request.json['username'],
-                                    password=request.json['password'],
-                                    email=request.json['email'])
-            token_de_acceso = create_access_token(identity=request.json['email'])
-            db.session.add(nuevo_usuario)
-            db.session.commit()
-            return {'mensaje': 'Usuario creado exitosamente',
-                    'token_de_acceso': token_de_acceso,
-                    'usuario': usuario_schema.dump(nuevo_usuario)}
+            if (request.json['password1'] != request.json['password2']):
+                return {'error': 'Las contrasenias no coinciden'}
+            else:
+                nuevo_usuario = Usuario(username=request.json['username'],
+                                        password=request.json['password1'],
+                                        email=request.json['email'])
+                token_de_acceso = create_access_token(identity=request.json['email'])
+                db.session.add(nuevo_usuario)
+                db.session.commit()
+                return {'mensaje': 'Usuario creado exitosamente',
+                        'token_de_acceso': token_de_acceso,
+                        'usuario': usuario_schema.dump(nuevo_usuario)}
 
 class VistaLogIn(Resource):
     def post(self):
@@ -35,15 +38,23 @@ class VistaLogIn(Resource):
             return {"mensaje":"Acceso concedido",
                     "token_de_acceso": token_de_acceso,
                     "usuario": usuario_schema.dump(usuario)}
-    
+
+class VistaUsuario(Resource):   
+    @jwt_required()
+    def delete(self, id_usuario):
+        usuario = Usuario.query.get_or_404(id_usuario)
+        db.session.delete(usuario)
+        db.session.commit()
+        return 'Operacion exitosa', 204
+
 class VistaTareas(Resource):
     @jwt_required()
     def post(self):
         usuario = Usuario.query.filter(Usuario.email == get_jwt_identity()).first()
         nueva_tarea = Tarea(fileName=request.json['fileName'],
                             newFormat=request.json['newFormat'],
-                            timeStamp=datetime.strptime(request.json['timeStamp'].split("T")[0], "%Y-%m-%d").date(),
-                            status=request.json['status'],
+                            timeStamp=datetime.today().date(),
+                            status="UPLOADED",
                             id_usuario=usuario.id)
         db.session.add(nueva_tarea)
         usuario.tareas.append(nueva_tarea)
@@ -58,12 +69,12 @@ class VistaTareasUsuario(Resource):
 
 class VistaTarea(Resource):
     @jwt_required()
-    def get(self, id_tarea):
-        return tarea_schema.dump(Tarea.query.get_or_404(id_tarea))
+    def get(self, id_task):
+        return tarea_schema.dump(Tarea.query.get_or_404(id_task))
 
     @jwt_required()
-    def delete(self, id_tarea):
-        tarea = Tarea.query.get_or_404(id_tarea)
+    def delete(self, id_task):
+        tarea = Tarea.query.get_or_404(id_task)
         db.session.delete(tarea)
         db.session.commit()
         return 'Operacion exitosa', 204
