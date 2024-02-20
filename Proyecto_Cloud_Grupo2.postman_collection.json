@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "a8ef5aa1-e35b-4a22-8e6d-44fbdd64ec4c",
 		"name": "Proyecto_Cloud_Grupo2",
-		"description": "Conjunto de pruebas para el Proyecto 0 del curso. Creado por Juan Diego Gonzalez Gomez.",
+		"description": "Conjunto de pruebas para el Proyecto 1 del curso.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "12464767"
 	},
@@ -142,7 +142,7 @@
 								""
 							]
 						},
-						"description": "Prueba el registro de un usuario en la aplicación con un nombre de usuario ya existente. No se debe crear el usuario en la aplicación."
+						"description": "Prueba el registro de un usuario en la aplicación con contrasenias distintas. No se debe crear el usuario en la aplicación."
 					},
 					"response": []
 				},
