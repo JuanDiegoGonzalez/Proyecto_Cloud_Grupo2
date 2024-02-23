@@ -12,9 +12,7 @@ const CreateRoutes = () => (
         <Route exact path="/" element={<Login />} />
         <Route exact path="/SignUp" element={<SignUp />} />
         <Route exact path="/home" element={<ListTarea/>} />
-        <Route exact path="/:id/newTask" element={<CrearTarea />} />
-        <Route exact path="/:id/newCategoria" element={<CrearCategoria />} />
-        <Route exact path="/:id/categorias" element={<ListCategoria />} />
+        <Route exact path="/converter" element={<CrearTarea />} />
     </Routes>
 );
 

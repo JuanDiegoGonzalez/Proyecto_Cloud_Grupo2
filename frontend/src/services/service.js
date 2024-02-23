@@ -20,8 +20,7 @@ const login = async (email, password) => {
             throw new Error('Error al iniciar sesión');
         }
         const data = await response.json();
-        console.log(data)
-        saveAuthData(data.access_token, data.nombre_usuario)
+        saveAuthData(data.token_de_acceso, data.nombre_usuario)
         return data; // Retorna los datos del usuario si la solicitud fue exitosa
     } catch (error) {
         throw new Error('Error al iniciar sesión:', error);
@@ -137,9 +136,10 @@ const createTask = async (taskData) => {
 };
 
 
-const getTareasByUser = async (id) => {
+const getTareasByUser = async () => {
     try {
-        const response = await fetch(`${back}/tareas/usuario/${id}`, {
+        console.log(`Bearer ${getToken()}`)
+        const response = await fetch(`${back}/tasks/`, {
             mode: 'cors',
             method: 'GET',
             headers: {

@@ -17,7 +17,7 @@ function ListTarea() {
     useEffect(() => {
         const fetchTareas = async () => {
             try {
-                const TareasData = await getTareasByUser(id);
+                const TareasData = await getTareasByUser();
                 if (!TareasData.detail) {
                     setTareas(TareasData);
                 } else {
@@ -29,9 +29,7 @@ function ListTarea() {
                 setError('Error al obtener las tareas');
             }
         };
-
         fetchTareas();
-
     }, []);
 
     return (

@@ -4,8 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import "./navbar.css"
 import { getUsername, removeAuthData } from '../../services/auth';
 
-function NavBar(props) {
-    const id = props.id;
+function NavBar() {
     const username =  getUsername();
     const navigate = useNavigate();
    
@@ -25,10 +24,8 @@ const handleLogout = () => {
                             navbarScroll
                         >
                             <span style={{ color: 'white', marginRight: '10px' }}>{username}</span>
-                            <Nav.Link style={{ color: "white" }} onClick={() => navigate(`/${id}/tareas`)}>Ver Tareas</Nav.Link>
-                            <Nav.Link style={{ color: "white" }} onClick={() => navigate(`/${id}/newTask`)}>Crear Tarea</Nav.Link>
-                            <Nav.Link style={{ color: "white" }} onClick={() => navigate(`/${id}/categorias`)}>Ver Categorias</Nav.Link>
-                            <Nav.Link style={{ color: "white" }} onClick={() => navigate(`/${id}/newCategoria`)}>Crear Categoria</Nav.Link>
+                            <Nav.Link style={{ color: "white" }} onClick={() => navigate(`/home`)}>Ver Tareas</Nav.Link>
+                            <Nav.Link style={{ color: "white" }} onClick={() => navigate(`/converter`)}>Convertir</Nav.Link>
                             <Nav.Link style={{ color: "white" }} onClick={() => handleLogout()}>Log Out</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>

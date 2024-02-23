@@ -12,7 +12,7 @@ class VistaSignUp(Resource):
     def post(self):
         yaExisteElUsuario = Usuario.query.filter(Usuario.email == request.json["email"]).first()
         if yaExisteElUsuario:
-            return {'error': 'Ya existe el usuario'}
+            return {'error': 'Ya existe un usuario con este correo '}
         else:
             if (request.json['password1'] != request.json['password2']):
                 return {'error': 'Las contrasenias no coinciden'}
