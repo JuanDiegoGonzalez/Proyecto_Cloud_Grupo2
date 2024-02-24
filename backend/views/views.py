@@ -2,6 +2,7 @@ from datetime import datetime
 from flask_restful import Resource
 from backend.models.models import Tarea, TareaSchema, Usuario, UsuarioSchema
 from ..models import db
+from ..models import auth
 from flask import request
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
 
@@ -17,8 +18,10 @@ class VistaSignUp(Resource):
             if (request.json['password1'] != request.json['password2']):
                 return {'error': 'Las contrasenias no coinciden'}
             else:
+                user_password= auth.hashear_contrasenia(request.json['password1'])
+                print("user", user_password)
                 nuevo_usuario = Usuario(username=request.json['username'],
-                                        password=request.json['password1'],
+                                        password=user_password,
                                         email=request.json['email'])
                 token_de_acceso = create_access_token(identity=request.json['email'])
                 db.session.add(nuevo_usuario)
@@ -29,11 +32,13 @@ class VistaSignUp(Resource):
 
 class VistaLogIn(Resource):
     def post(self):
-        usuario = Usuario.query.filter(Usuario.email == request.json["email"], Usuario.password == request.json["password"]).first()
+        usuario = Usuario.query.filter(Usuario.email == request.json["email"]).first()
         db.session.commit()
         if usuario is None:
             return {"error":"El usuario no existe"}
         else:
+            if not auth.verificar_contrasenia(request.json["password"], usuario.password):
+                 return {'error': 'Credenciales inválidas'}
             token_de_acceso = create_access_token(identity = usuario.email)
             return {"mensaje":"Acceso concedido",
                     "token_de_acceso": token_de_acceso,
