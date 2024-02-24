@@ -115,7 +115,7 @@ const deleteCategoria = async (categoriaId) => {
 
 const createTask = async (taskData) => {
     try {
-        const response = await fetch(back + '/tareas', {
+        const response = await fetch(back + '/tasks/', {
             mode: 'cors',
             method: 'POST',
             headers: {
@@ -129,6 +129,7 @@ const createTask = async (taskData) => {
             throw new Error('Error al crear la tarea');
         }
         const data = await response.json();
+        console.log(data)
         return data;
     } catch (error) {
         throw new Error('Error en la solicitud de creación de tarea:', error);
@@ -157,7 +158,7 @@ const getTareasByUser = async () => {
 
 const deleteTarea = async (tareaId) => {
     try {
-        const response = await fetch(`${back}/tareas/${tareaId}`, {
+        const response = await fetch(`${back}/tasks/${tareaId}/`, {
             mode: 'cors',
             method: 'DELETE',
             headers: {
@@ -165,8 +166,7 @@ const deleteTarea = async (tareaId) => {
                 'Authorization': `Bearer ${getToken()}`
             }
         });
-        const data = await response.json();
-        return data;
+
 
     } catch (error) {
         throw new Error('Error en la solicitud de eliminación de la tarea:', error);

@@ -12,7 +12,6 @@ function ListTarea() {
     const navigate = useNavigate();
     const [error, setError] = useState("");
     const [Tareas, setTareas] = useState([]);
-    const { id } = useParams();
 
     useEffect(() => {
         const fetchTareas = async () => {
@@ -34,7 +33,7 @@ function ListTarea() {
 
     return (
         <div>
-            <NavBar id={id} />
+            <NavBar  />
             <div className="Tareas">
                 {error && (
                     <div>
@@ -48,16 +47,17 @@ function ListTarea() {
                         No hay tareas por ahora :D be Happy . . .
                     </div>
                 )}
+                {console.log(Tareas)}
                 {Tareas.length > 0 && (
                     <Row className="body">
                         {Tareas.map((item, index) => (
                             <Col md={2} key={index}>
                                 <CardPlaces
-                                    texto_tarea={item.texto_tarea}
-                                    fecha_creacion={item.fecha_creacion}
-                                    fecha_tentativa_finalizacion={item.fecha_tentativa_finalizacion}
-                                    estado={item.estado}
-                                    categoria={item.id_categoria}
+                                    title={item.fileName}
+                                    oldFormat={item.oldFormat}
+                                    newFormat={item.newFormat}
+                                    status={item.status}
+                                    timeStamp={item.timeStamp}
                                     idTarea={item.id}
                                 />
                             </Col>

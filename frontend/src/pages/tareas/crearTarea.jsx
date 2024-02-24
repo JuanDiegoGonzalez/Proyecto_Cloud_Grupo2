@@ -20,26 +20,13 @@ function CrearTarea() {
         setSelectedFile(e.target.files[0]);
     };
 
-    useEffect(() => {
-        const fetchCategorias = async () => {
-            try {
-                const categoriasData = await getCategorias();
-
-            } catch (error) {
-                console.error('Error al obtener las categorías:', error);
-            }
-        };
-
-        fetchCategorias();
-    }, []);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const taskData = {
-
-            };
-
+                fileName: "ruta del archivo uwu", 
+                newFormat:"PDF"
+            }
             const data = await createTask(taskData);
             if (data) {
                 navigate(`/home`);
@@ -72,7 +59,6 @@ function CrearTarea() {
                             <input type="file" onChange={handleFileChange} accept={`.${selectedFileType}`} />
                             <br />
                             <button type="submit" className="btn btn-primary btn-block btn-large">Convertir a PDF</button>
-
                         </>
                     )}
                 </form>
