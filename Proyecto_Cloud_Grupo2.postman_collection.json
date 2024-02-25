@@ -426,15 +426,17 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"console.log(pm.response)\r",
-									"\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
 									"var id_task = parseInt(pm.response.json().id, 10);\r",
 									"pm.environment.set(\"id_task\", id_task);\r",
-									"pm.environment.set(\"id_task_no_existente\", id_task+1000000);"
+									"pm.environment.set(\"id_task_no_existente\", id_task+1000000);\r",
+									"\r",
+									"var fileName_task = pm.response.json().fileName;\r",
+									"pm.environment.set(\"fileName_task\", fileName_task);\r",
+									"pm.environment.set(\"fileName_task_no_existente\", \"fileName_task_no_existente\");"
 								],
 								"type": "text/javascript"
 							}
@@ -529,7 +531,7 @@
 					"response": []
 				},
 				{
-					"name": "List Tarea",
+					"name": "Get Tarea",
 					"event": [
 						{
 							"listen": "test",
@@ -574,7 +576,7 @@
 					"response": []
 				},
 				{
-					"name": "List Unexistent Tarea",
+					"name": "Get Unexistent Tarea",
 					"event": [
 						{
 							"listen": "test",
@@ -615,6 +617,94 @@
 							]
 						},
 						"description": "Busca una tarea con un id inexistente."
+					},
+					"response": []
+				},
+				{
+					"name": "Get File",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_de_acceso}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/files/{{fileName_task}}",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"files",
+								"{{fileName_task}}"
+							]
+						},
+						"description": "Busca un archivo con un fileName existente en la aplicación."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Unexistent File",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_de_acceso}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ip}}:{{puerto}}/api/files/{{fileName_task_no_existente}}",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{puerto}}",
+							"path": [
+								"api",
+								"files",
+								"{{fileName_task_no_existente}}"
+							]
+						},
+						"description": "Busca un archivo con un fileName inexistente."
 					},
 					"response": []
 				},

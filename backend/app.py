@@ -1,5 +1,5 @@
 from backend import create_app
-from backend.views.views import VistaLogIn, VistaSignUp, VistaUsuario, VistaTareasUsuario
+from backend.views.views import VistaLogIn, VistaSignUp, VistaUsuario, VistaTareasUsuario, VistaArchivo
 from .models import db
 from flask_restful import Api
 from .views import VistaTareas, VistaTarea
@@ -22,5 +22,6 @@ api.add_resource(VistaUsuario, '/api/usuarios/<int:id_usuario>/')
 api.add_resource(VistaTareasUsuario, '/api/tasks/')
 api.add_resource(VistaTareas, '/api/tasks/')
 api.add_resource(VistaTarea, '/api/tasks/<int:id_task>/')
+api.add_resource(VistaArchivo, '/api/files/<string:filename>/')
 
 jwt = JWTManager(app)
