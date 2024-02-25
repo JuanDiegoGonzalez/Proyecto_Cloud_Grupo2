@@ -1,5 +1,6 @@
 from datetime import datetime
 import os
+import json
 from flask_restful import Resource
 from backend.models.models import Tarea, TareaSchema, Usuario, UsuarioSchema
 from ..models import db
@@ -20,7 +21,6 @@ class VistaSignUp(Resource):
                 return {'error': 'Las contrasenias no coinciden'}
             else:
                 user_password= auth.hashear_contrasenia(request.json['password1'])
-                print("user", user_password)
                 nuevo_usuario = Usuario(username=request.json['username'],
                                         password=user_password,
                                         email=request.json['email'])
@@ -64,13 +64,14 @@ class VistaTareas(Resource):
         parts = file.filename.split(".")
         oldFormat = parts[-1]
 
+        json_data = json.loads(request.form.get('data'))
         nueva_tarea = Tarea(fileName=file.filename,
                             oldFormat=oldFormat,
-                            newFormat=request.json['newFormat'],
+                            newFormat=json_data['newFormat'],
                             timeStamp=datetime.today(),
                             status="UPLOADED",
                             id_usuario=usuario.id)
-        
+
         db.session.add(nueva_tarea)
         usuario.tareas.append(nueva_tarea)
         db.session.commit()
