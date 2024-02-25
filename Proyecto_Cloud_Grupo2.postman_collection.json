@@ -426,6 +426,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"console.log(pm.response)\r",
+									"\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
@@ -452,13 +454,19 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"fileName\": \"prueba.txt\",\r\n    \"newFormat\": \"pdf\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "data",
+									"value": "{\n    \"fileName\": \"ruta del archivo uwu\", \n    \"newFormat\":\"PDF\"\n}",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "TestDOCX.docx"
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{ip}}:{{puerto}}/api/tasks/",
