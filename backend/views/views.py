@@ -59,7 +59,7 @@ class VistaTareas(Resource):
         usuario = Usuario.query.filter(Usuario.email == get_jwt_identity()).first()
 
         file = request.files['file']
-        file.save(os.path.join("./files/uploaded", file.filename))
+        file.save(os.path.join("files", "uploaded", file.filename))
 
         parts = file.filename.split(".")
         oldFormat = parts[-1]
@@ -76,8 +76,8 @@ class VistaTareas(Resource):
         usuario.tareas.append(nueva_tarea)
         db.session.commit()
 
-        input_path = os.path.join("./files/uploaded", file.filename)
-        output_path = os.path.join("./files/processed", ".".join(parts[:-1]) + ".pdf")
+        input_path = os.path.join("files", "uploaded", file.filename)
+        output_path = os.path.join("files", "processed", ".".join(parts[:-1]) + ".pdf")
         match oldFormat:
             case "docx":
                 docx_a_pdf(input_path, output_path)
@@ -120,6 +120,12 @@ class VistaArchivo(Resource):
     @jwt_required()
     def get(self, filename):
         usuario = Usuario.query.filter(Usuario.email == get_jwt_identity()).first()
-        tarea = Tarea.query.filter(Tarea.fileName == filename)
+        tarea = Tarea.query.filter(Tarea.fileName == filename).first()
         # Buscar esa tarea, de ese usuario
-        return send_file(os.path.join("./files/processed", "filename"), as_attachment=True)
+        if tarea is None:
+            return 'El archivo no existe', 404
+        elif tarea.status == "UPLOADED":
+            return {'error': 'Procesando archivo...'}
+        else:
+            parts = tarea.fileName.split(".")
+            return send_file(os.path.join("files", "processed", ".".join(parts[:-1]) + ".pdf"), as_attachment=True)
