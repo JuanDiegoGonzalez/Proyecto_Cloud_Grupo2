@@ -5,7 +5,7 @@ from flask_restful import Resource
 from backend.models.models import Tarea, TareaSchema, Usuario, UsuarioSchema
 from ..models import db
 from ..auth import auth
-from flask import request
+from flask import request, send_file
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
 from ..file_processing.tasks import docx_a_pdf, pptx_a_pdf, xlsx_a_pdf, odt_a_pdf
 usuario_schema = UsuarioSchema()
@@ -115,3 +115,11 @@ class VistaTarea(Resource):
         if tarea.status == "PROCESSED":
             ...  # TODO
         return 'Operacion exitosa', 204
+    
+class VistaArchivo(Resource):
+    @jwt_required()
+    def get(self, filename):
+        usuario = Usuario.query.filter(Usuario.email == get_jwt_identity()).first()
+        tarea = Tarea.query.filter(Tarea.fileName == filename)
+        # Buscar esa tarea, de ese usuario
+        return send_file(os.path.join("./files/processed", "filename"), as_attachment=True)
