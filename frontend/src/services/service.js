@@ -115,14 +115,17 @@ const deleteCategoria = async (categoriaId) => {
 
 const createTask = async (taskData) => {
     try {
+        console.log(taskData)
+        for (var key of taskData.entries()) {
+            console.log(key[0] + ', ' + key[1]);
+        }
         const response = await fetch(back + '/tasks/', {
             mode: 'cors',
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${getToken()}`
             },
-            body: JSON.stringify(taskData)
+            body: taskData
         });
 
         if (!response.ok) {

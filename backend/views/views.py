@@ -1,11 +1,13 @@
 from datetime import datetime
+import os
+import json
 from flask_restful import Resource
 from backend.models.models import Tarea, TareaSchema, Usuario, UsuarioSchema
 from ..models import db
-from ..models import auth
+from ..auth import auth
 from flask import request
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
-
+from ..file_processing.tasks import docx_a_pdf, pptx_a_pdf, xlsx_a_pdf, odt_a_pdf
 usuario_schema = UsuarioSchema()
 tarea_schema = TareaSchema()
 
@@ -19,7 +21,6 @@ class VistaSignUp(Resource):
                 return {'error': 'Las contrasenias no coinciden'}
             else:
                 user_password= auth.hashear_contrasenia(request.json['password1'])
-                print("user", user_password)
                 nuevo_usuario = Usuario(username=request.json['username'],
                                         password=user_password,
                                         email=request.json['email'])
@@ -56,16 +57,43 @@ class VistaTareas(Resource):
     @jwt_required()
     def post(self):
         usuario = Usuario.query.filter(Usuario.email == get_jwt_identity()).first()
-        oldFormat = request.json['fileName'].split(".")[-1]
-        nueva_tarea = Tarea(fileName=request.json['fileName'],
+
+        file = request.files['file']
+        file.save(os.path.join("./files/uploaded", file.filename))
+
+        parts = file.filename.split(".")
+        oldFormat = parts[-1]
+
+        json_data = json.loads(request.form.get('data'))
+        nueva_tarea = Tarea(fileName=file.filename,
                             oldFormat=oldFormat,
-                            newFormat=request.json['newFormat'],
+                            newFormat=json_data['newFormat'],
                             timeStamp=datetime.today(),
                             status="UPLOADED",
                             id_usuario=usuario.id)
+
         db.session.add(nueva_tarea)
         usuario.tareas.append(nueva_tarea)
         db.session.commit()
+
+        input_path = os.path.join("./files/uploaded", file.filename)
+        output_path = os.path.join("./files/processed", ".".join(parts[:-1]) + ".pdf")
+        match oldFormat:
+            case "docx":
+                docx_a_pdf(input_path, output_path)
+
+            case "pptx":
+                pptx_a_pdf(input_path, output_path)
+
+            case "xlsx":
+                xlsx_a_pdf(input_path, output_path)
+            
+            case "odt":
+                odt_a_pdf(input_path, output_path)
+
+            case _:
+                ...
+
         return tarea_schema.dump(nueva_tarea)
 
 class VistaTareasUsuario(Resource):

@@ -23,10 +23,13 @@ function CrearTarea() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const taskData = {
+            const taskData = new FormData();
+            taskData.append('file', selectedFile)
+            const jsonData = {
                 fileName: "ruta del archivo uwu", 
                 newFormat:"PDF"
             }
+            taskData.append('data', JSON.stringify(jsonData))
             const data = await createTask(taskData);
             if (data) {
                 navigate(`/home`);
