@@ -110,13 +110,14 @@ class VistaTarea(Resource):
     @jwt_required()
     def delete(self, id_task):
         tarea = Tarea.query.get_or_404(id_task)
-        db.session.delete(tarea)
-        db.session.commit()
-        if tarea.status == "PROCESSED":
+        if str(tarea.status) == "Estado.PROCESSED":
             parts = tarea.fileName.split(".")
             os.remove(os.path.join("files", "uploaded", tarea.fileName))
             os.remove(os.path.join("files", "processed", ".".join(parts[:-1]) + ".pdf"))
-        return 'Operacion exitosa', 204
+            db.session.delete(tarea)
+            db.session.commit()
+            return 'Operacion exitosa', 204
+        return {'error': 'El archivo no se ha procesado...'}
     
 class VistaArchivo(Resource):
     @jwt_required()

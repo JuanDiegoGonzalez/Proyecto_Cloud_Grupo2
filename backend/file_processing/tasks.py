@@ -1,3 +1,4 @@
+import os
 from celery import Celery
 from fpdf import FPDF
 from docx import Document
@@ -26,41 +27,45 @@ def actualizar_bd(id_tarea):
 
 @app.task
 def docx_a_pdf(docx_file, pdf_file, id_tarea):
-    document = Document(docx_file)
-    pdf = crear_pdf()
-    for para in document.paragraphs:
-        pdf.cell(200, 10, txt=para.text, ln=True, align='L')
-    pdf.output(pdf_file)
-    actualizar_bd(id_tarea)
+    if os.path.exists(docx_file):
+        document = Document(docx_file)
+        pdf = crear_pdf()
+        for para in document.paragraphs:
+            pdf.cell(200, 10, txt=para.text, ln=True, align='L')
+        pdf.output(pdf_file)
+        actualizar_bd(id_tarea)
 
 @app.task
 def pptx_a_pdf(pptx_file, pdf_file, id_tarea):
-    presentation = Presentation(pptx_file)
-    pdf = crear_pdf()
-    for slide in presentation.slides:
-        for shape in slide.shapes:
-            if hasattr(shape, "text"):
-                pdf.cell(200, 10, txt=shape.text, ln=True, align='L')
-    pdf.output(pdf_file)
-    actualizar_bd(id_tarea)
+    if os.path.exists(pptx_file):
+        presentation = Presentation(pptx_file)
+        pdf = crear_pdf()
+        for slide in presentation.slides:
+            for shape in slide.shapes:
+                if hasattr(shape, "text"):
+                    pdf.cell(200, 10, txt=shape.text, ln=True, align='L')
+        pdf.output(pdf_file)
+        actualizar_bd(id_tarea)
 
 @app.task
 def xlsx_a_pdf(xlsx_file, pdf_file, id_tarea):
-    wb = load_workbook(xlsx_file)
-    pdf = crear_pdf()
-    for sheet_name in wb.sheetnames:
-        sheet = wb[sheet_name]
-        for row in sheet.iter_rows():
-            for cell in row:
-                pdf.cell(40, 10, txt=str(cell.value), ln=True)
-    pdf.output(pdf_file)
-    actualizar_bd(id_tarea)
+    if os.path.exists(xlsx_file):
+        wb = load_workbook(xlsx_file)
+        pdf = crear_pdf()
+        for sheet_name in wb.sheetnames:
+            sheet = wb[sheet_name]
+            for row in sheet.iter_rows():
+                for cell in row:
+                    pdf.cell(40, 10, txt=str(cell.value), ln=True)
+        pdf.output(pdf_file)
+        actualizar_bd(id_tarea)
 
 @app.task
 def odt_a_pdf(odt_file, pdf_file, id_tarea):
-    doc = load(odt_file)
-    pdf = crear_pdf()
-    for para in doc.getElementsByType(text.P):
-        pdf.cell(200, 10, txt=teletype.extractText(para), ln=True, align='L')
-    pdf.output(pdf_file)
-    actualizar_bd(id_tarea)
+    if os.path.exists(odt_file):
+        doc = load(odt_file)
+        pdf = crear_pdf()
+        for para in doc.getElementsByType(text.P):
+            pdf.cell(200, 10, txt=teletype.extractText(para), ln=True, align='L')
+        pdf.output(pdf_file)
+        actualizar_bd(id_tarea)
