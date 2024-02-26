@@ -5,51 +5,62 @@ from pptx import Presentation
 from openpyxl import load_workbook
 from odf import text, teletype
 from odf.opendocument import load
+from sqlalchemy import create_engine
+from sqlalchemy import text as tx
 
 app = Celery('tasks_copy', broker = 'redis://localhost:6379/0')
+DATABASE_URL = 'postgresql://postgres:password@localhost:5432/postgres'
 
-@app.task
-def docx_a_pdf(docx_file, pdf_file):
-    document = Document(docx_file)
+def crear_pdf():
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size = 12)
+    return pdf
+
+def actualizar_bd(id_tarea):
+    engine = create_engine(DATABASE_URL)
+    engine.connect()
+    query = f"UPDATE tarea SET status = 'PROCESSED' WHERE id = {id_tarea}"
+    with engine.begin() as conn:
+        conn.execute(tx(query))
+
+@app.task
+def docx_a_pdf(docx_file, pdf_file, id_tarea):
+    document = Document(docx_file)
+    pdf = crear_pdf()
     for para in document.paragraphs:
         pdf.cell(200, 10, txt=para.text, ln=True, align='L')
     pdf.output(pdf_file)
+    actualizar_bd(id_tarea)
 
 @app.task
-def pptx_a_pdf(pptx_file, pdf_file):
+def pptx_a_pdf(pptx_file, pdf_file, id_tarea):
     presentation = Presentation(pptx_file)
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size = 12)
+    pdf = crear_pdf()
     for slide in presentation.slides:
         for shape in slide.shapes:
             if hasattr(shape, "text"):
                 pdf.cell(200, 10, txt=shape.text, ln=True, align='L')
     pdf.output(pdf_file)
+    actualizar_bd(id_tarea)
 
 @app.task
-def xlsx_a_pdf(xlsx_file, pdf_file):
+def xlsx_a_pdf(xlsx_file, pdf_file, id_tarea):
     wb = load_workbook(xlsx_file)
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size = 12)
-
+    pdf = crear_pdf()
     for sheet_name in wb.sheetnames:
         sheet = wb[sheet_name]
         for row in sheet.iter_rows():
             for cell in row:
                 pdf.cell(40, 10, txt=str(cell.value), ln=True)
     pdf.output(pdf_file)
+    actualizar_bd(id_tarea)
 
 @app.task
-def odt_a_pdf(odt_file, pdf_file):
+def odt_a_pdf(odt_file, pdf_file, id_tarea):
     doc = load(odt_file)
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size = 12)
+    pdf = crear_pdf()
     for para in doc.getElementsByType(text.P):
         pdf.cell(200, 10, txt=teletype.extractText(para), ln=True, align='L')
     pdf.output(pdf_file)
+    actualizar_bd(id_tarea)

@@ -80,16 +80,16 @@ class VistaTareas(Resource):
         output_path = os.path.join("files", "processed", ".".join(parts[:-1]) + ".pdf")
         match oldFormat:
             case "docx":
-                docx_a_pdf(input_path, output_path)
+                docx_a_pdf(input_path, output_path, nueva_tarea.id)
 
             case "pptx":
-                pptx_a_pdf(input_path, output_path)
+                pptx_a_pdf(input_path, output_path, nueva_tarea.id)
 
             case "xlsx":
-                xlsx_a_pdf(input_path, output_path)
+                xlsx_a_pdf(input_path, output_path, nueva_tarea.id)
             
             case "odt":
-                odt_a_pdf(input_path, output_path)
+                odt_a_pdf(input_path, output_path, nueva_tarea.id)
 
             case _:
                 ...
@@ -113,7 +113,9 @@ class VistaTarea(Resource):
         db.session.delete(tarea)
         db.session.commit()
         if tarea.status == "PROCESSED":
-            ...  # TODO
+            parts = tarea.fileName.split(".")
+            os.remove(os.path.join("files", "uploaded", tarea.fileName))
+            os.remove(os.path.join("files", "processed", ".".join(parts[:-1]) + ".pdf"))
         return 'Operacion exitosa', 204
     
 class VistaArchivo(Resource):
