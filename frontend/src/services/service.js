@@ -158,7 +158,27 @@ const getTareasByUser = async () => {
         throw new Error('Error al obtener las tareas:', error);
     }
 }
+const downloadTarea = async (tareaId, tareaTitle) => {
+    try {
+        fetch(`${back}/files/${tareaId}_${tareaTitle}/`, {
+            mode: 'cors',
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${getToken()}`
+            }
+        }).then( res => res.blob() )
+        .then( blob => {
+            var file = window.URL.createObjectURL(blob);
+            var fileLink = document.createElement('a');
 
+            fileLink.href = file;
+            fileLink.download = tareaTitle.substring(0, tareaTitle.lastIndexOf('.'));
+            fileLink.click();
+        });;
+    } catch (error) {
+        throw new Error('Error en la solicitud de eliminación de la tarea:', error);
+    }
+};
 const deleteTarea = async (tareaId) => {
     try {
         const response = await fetch(`${back}/tasks/${tareaId}/`, {
@@ -175,4 +195,4 @@ const deleteTarea = async (tareaId) => {
         throw new Error('Error en la solicitud de eliminación de la tarea:', error);
     }
 };
-export { login, signUp, postCategoria, getCategorias, createTask, getTareasByUser, deleteCategoria, deleteTarea };
+export { login, signUp, postCategoria, getCategorias, createTask, getTareasByUser, deleteCategoria, downloadTarea, deleteTarea };

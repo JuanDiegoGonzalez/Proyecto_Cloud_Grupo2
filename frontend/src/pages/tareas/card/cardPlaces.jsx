@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-import { deleteTarea } from '../../../services/service';
+import { downloadTarea, deleteTarea } from '../../../services/service';
 
 
 function CardPlaces(props) {
@@ -22,6 +22,13 @@ function CardPlaces(props) {
             minute: 'numeric'
         };
         return new Date(dateString).toLocaleDateString('es-ES', options);
+    };
+    const handleDownloadTarea = async (tareaId, tareaTitle) => {
+        try {
+            await downloadTarea(tareaId, tareaTitle);
+        } catch (error) {
+            setError('Error al descargar la tarea');
+        }
     };
     const handleDeleteTarea = async (tareaId) => {
         try {
@@ -50,6 +57,7 @@ function CardPlaces(props) {
                         <ListGroup.Item> <b>Estado:</b> {props.status.llave} </ListGroup.Item>
                         <ListGroup.Item> <b>Fecha de creación:</b> {props.timeStamp}</ListGroup.Item>
                         <br />
+                        <Button disabled={!enable} variant="info" onClick={() => handleDownloadTarea(props.idTarea, props.title)}>Download</Button>
                         <Button disabled={!enable} variant="danger" onClick={() => handleDeleteTarea(props.idTarea)}>Delete</Button>
                     </ListGroup>
                 </Card>
