@@ -118,8 +118,8 @@ class VistaTarea(Resource):
         tarea = Tarea.query.get_or_404(id_task)
         if str(tarea.status) == "Estado.PROCESSED":
             parts = tarea.fileName.split(".")
-            os.remove(os.path.join("files", "uploaded", tarea.fileName))
-            os.remove(os.path.join("files", "processed", ".".join(parts[:-1]) + ".pdf"))
+            os.remove(os.path.join("files", "uploaded", str(id_task) + "_" + tarea.fileName))
+            os.remove(os.path.join("files", "processed", str(id_task) + "_" + ".".join(parts[:-1]) + ".pdf"))
             db.session.delete(tarea)
             db.session.commit()
             return 'Operacion exitosa', 204
@@ -137,5 +137,5 @@ class VistaArchivo(Resource):
         elif tarea.status == "UPLOADED":
             return {'error': 'Procesando archivo...'}
         else:
-            parts = tarea.fileName.split(".")
-            return send_file(os.path.join("files", "processed", "_".join(parts[:-1]) + ".pdf"), as_attachment=True)
+            parts = filename.split(".")
+            return send_file(os.path.join("files", "processed", ".".join(parts[:-1]) + ".pdf"), as_attachment=True)
