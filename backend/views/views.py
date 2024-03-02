@@ -66,7 +66,6 @@ class VistaTareas(Resource):
         nueva_tarea = Tarea(fileName=file.filename,
                             oldFormat=oldFormat,
                             newFormat=json_data['newFormat'],
-                            timeStamp=datetime.today(),
                             status="UPLOADED",
                             id_usuario=usuario.id)
 

@@ -1,3 +1,4 @@
+from datetime import datetime
 import enum
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
@@ -21,7 +22,7 @@ class Tarea(db.Model):
     fileName = db.Column(db.String(256))
     oldFormat = db.Column(db.String(64))
     newFormat = db.Column(db.String(64))
-    timeStamp = db.Column(db.Date)
+    timeStamp = db.Column(db.DateTime, default=datetime.utcnow)
     status = db.Column(db.Enum(Estado))
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'))
     
