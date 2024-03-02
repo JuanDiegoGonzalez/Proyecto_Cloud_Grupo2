@@ -10,7 +10,7 @@ function NavBar() {
    
 const handleLogout = () => {
     removeAuthData();
-    navigate(`/login`);
+    navigate(`/`);
 };
     return (
         <div>

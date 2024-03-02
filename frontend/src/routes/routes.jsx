@@ -9,7 +9,7 @@ import ListTarea from "../pages/tareas/listaTareas";
 
 const CreateRoutes = () => (
     <Routes>
-        <Route exact path="/login" element={<Login />} />
+        <Route exact path="/" element={<Login />} />
         <Route exact path="/SignUp" element={<SignUp />} />
         <Route exact path="/home" element={<ListTarea/>} />
         <Route exact path="/converter" element={<CrearTarea />} />
