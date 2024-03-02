@@ -434,7 +434,7 @@
 									"pm.environment.set(\"id_task\", id_task);\r",
 									"pm.environment.set(\"id_task_no_existente\", id_task+1000000);\r",
 									"\r",
-									"var fileName_task = pm.response.json().fileName;\r",
+									"var fileName_task = pm.response.json().id + \"_\" + pm.response.json().fileName;\r",
 									"pm.environment.set(\"fileName_task\", fileName_task);\r",
 									"pm.environment.set(\"fileName_task_no_existente\", \"fileName_task_no_existente\");"
 								],
@@ -782,7 +782,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{ip}}:{{puerto}}/api/tasks/{{id_tarea}}/",
+							"raw": "{{ip}}:{{puerto}}/api/tasks/{{id_task}}/",
 							"host": [
 								"{{ip}}"
 							],
@@ -790,7 +790,7 @@
 							"path": [
 								"api",
 								"tasks",
-								"{{id_tarea}}",
+								"{{id_task}}",
 								""
 							]
 						},
