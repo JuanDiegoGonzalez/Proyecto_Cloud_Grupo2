@@ -13,6 +13,15 @@ function ListTarea() {
     const [error, setError] = useState("");
     const [Tareas, setTareas] = useState([]);
 
+    function formatDateTime(dateTimeString) {
+        const dateTime = new Date(dateTimeString);
+        dateTime.setHours(dateTime.getHours() - 5);
+    
+        const formattedDate = dateTime.toLocaleDateString(); 
+        const formattedTime = dateTime.toLocaleTimeString();
+    
+        return `${formattedDate} ${formattedTime}`;
+    }
     useEffect(() => {
         const fetchTareas = async () => {
             try {
@@ -57,7 +66,7 @@ function ListTarea() {
                                     oldFormat={item.oldFormat}
                                     newFormat={item.newFormat}
                                     status={item.status}
-                                    timeStamp={item.timeStamp}
+                                    timeStamp={formatDateTime(item.timeStamp)}
                                     idTarea={item.id}
                                 />
                             </Col>

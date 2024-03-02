@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { signUp } from '../../services/service'; 
 import {Link} from "react-router-dom";
 
-function Login() {
+function SignUp() {
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -16,6 +16,10 @@ function Login() {
 
     const handleSignUp = async (e) => {
         e.preventDefault();
+        if (password.length < 8) {
+            setError("La contraseña debe tener al menos 8 caracteres");
+            return;
+        }
             try{
                 const data = await signUp(username, password, password2, email);
                 console.log("jajaj signup" , data)
@@ -46,4 +50,4 @@ function Login() {
         </div>
     );
 }
-export default Login;
+export default SignUp;

@@ -22,6 +22,10 @@ function CrearTarea() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!selectedFile) {
+            setError("Por favor, selecciona un archivo antes de convertirlo a PDF");
+            return;
+        }
         try {
             const taskData = new FormData();
             taskData.append('file', selectedFile)
