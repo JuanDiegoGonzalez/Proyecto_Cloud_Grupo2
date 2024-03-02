@@ -130,7 +130,7 @@ class VistaArchivo(Resource):
         parts = filename.split("_")
         usuario = Usuario.query.filter(Usuario.email == get_jwt_identity()).first()
         tarea = Tarea.query.filter(Tarea.fileName == "_".join(parts[1:])).first()
-        
+
         if (tarea is None) or (usuario.id != tarea.id_usuario):
             return 'El archivo no existe', 404
         elif tarea.status == "UPLOADED":
