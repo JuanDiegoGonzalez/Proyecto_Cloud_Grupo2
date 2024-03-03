@@ -74,7 +74,7 @@ class VistaTareas(Resource):
         db.session.commit()
 
         input_path = os.path.join("backend","files", "uploaded", str(nueva_tarea.id) + "_" + file.filename)
-        output_path = os.path.join("backend","files", "processed", str(nueva_tarea.id) + "_" + ".".join(parts[:-1]) + ".pdf")S
+        output_path = os.path.join("backend","files", "processed", str(nueva_tarea.id) + "_" + ".".join(parts[:-1]) + ".pdf")
         file.save(input_path)
 
         match oldFormat:
