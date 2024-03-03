@@ -30,6 +30,7 @@ const login = async (email, password) => {
 const signUp = async (username, password, password2, email) => {
     try {
         const response = await fetch(back + '/auth/signup/', {
+            mode: 'cors',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
