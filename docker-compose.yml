@@ -19,7 +19,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      REACT_APP_BACKEND_HOST: "http://3.231.74.173:5000"
+      REACT_APP_BACKEND_HOST: "http://3.231.74.173:5000/api"
   
   db:
     restart: always
