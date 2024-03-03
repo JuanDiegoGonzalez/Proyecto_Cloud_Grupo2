@@ -22,7 +22,6 @@ function SignUp() {
         }
             try{
                 const data = await signUp(username, password, password2, email);
-                console.log("jajaj signup" , data)
                     if (!data.error) {
                         navigate(`/home`);
                     } else {

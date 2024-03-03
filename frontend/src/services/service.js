@@ -115,7 +115,6 @@ const deleteCategoria = async (categoriaId) => {
 
 const createTask = async (taskData) => {
     try {
-        console.log(taskData)
         for (var key of taskData.entries()) {
             console.log(key[0] + ', ' + key[1]);
         }
@@ -132,7 +131,6 @@ const createTask = async (taskData) => {
             throw new Error('Error al crear la tarea');
         }
         const data = await response.json();
-        console.log(data)
         return data;
     } catch (error) {
         throw new Error('Error en la solicitud de creación de tarea:', error);
@@ -142,7 +140,6 @@ const createTask = async (taskData) => {
 
 const getTareasByUser = async () => {
     try {
-        console.log(`Bearer ${getToken()}`)
         const response = await fetch(`${back}/tasks/`, {
             mode: 'cors',
             method: 'GET',
@@ -152,7 +149,6 @@ const getTareasByUser = async () => {
             }
         });
         const data = await response.json();
-        console.log(data)
         return data;
     } catch (error) {
         throw new Error('Error al obtener las tareas:', error);

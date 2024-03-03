@@ -56,7 +56,6 @@ function ListTarea() {
                         No hay tareas por ahora :D be Happy . . .
                     </div>
                 )}
-                {console.log(Tareas)}
                 {Tareas.length > 0 && (
                     <Row className="body">
                         {Tareas.map((item, index) => (
