@@ -1,6 +1,6 @@
 # Proyecto --- ISIS-4426 Desarrollo de soluciones cloud 
 
-## Integrantes:
+## Integrantes
 - Brenda Catalina Barahona Pinilla - bc.barahona@uniandes.edu.co
 - Juan Diego Gonzalez Gomez - jd.gonzalezg1@uniandes.edu.co
 - Kevin Steven Gamez Abril - ks.gamez@uniandes.edu.co
