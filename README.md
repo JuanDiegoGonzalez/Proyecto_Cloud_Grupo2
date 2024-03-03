@@ -6,6 +6,11 @@
 - Kevin Steven Gamez Abril - ks.gamez@uniandes.edu.co
 - Sergio Julian Zona Moreno - sj.zona@uniandes.edu.co
 
+## Wiki
+> [!IMPORTANT]  
+> 👉 Link a la [Wiki](https://github.com/JuanDiegoGonzalez/Proyecto_Cloud_Grupo2/wiki/Wiki) del proyecto
+
+
 ## Pasos para Ejecutar la Aplicación
 
 1. Clonar el repositorio `https://github.com/JuanDiegoGonzalez/Proyecto_Cloud_Grupo2`
