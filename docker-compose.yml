@@ -22,7 +22,6 @@ services:
       REACT_APP_BACKEND_HOST: "http://3.231.74.173:5000/api"
   
   db:
-    restart: always
     environment: 
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password

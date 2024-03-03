@@ -31,7 +31,8 @@ def docx_a_pdf(docx_file, pdf_file, id_tarea):
         document = Document(docx_file)
         pdf = crear_pdf()
         for para in document.paragraphs:
-            pdf.cell(200, 10, txt=para.text, ln=True, align='L')
+            text = para.text.encode('latin-1', 'replace').decode('latin-1')
+            pdf.cell(200, 10, txt=text, ln=True, align='L')
         pdf.output(pdf_file)
         actualizar_bd(id_tarea)
 
