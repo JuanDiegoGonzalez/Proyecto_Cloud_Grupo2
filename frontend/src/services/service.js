@@ -20,7 +20,7 @@ const login = async (email, password) => {
             throw new Error('Error al iniciar sesión');
         }
         const data = await response.json();
-        saveAuthData(data.token_de_acceso, data.nombre_usuario)
+        saveAuthData(data.token_de_acceso, data.usuario.username)
         return data; // Retorna los datos del usuario si la solicitud fue exitosa
     } catch (error) {
         throw new Error('Error al iniciar sesión:', error);
@@ -42,7 +42,7 @@ const signUp = async (username, password, password2, email) => {
             })
         });
         const data = await response.json();
-        saveAuthData(data.token_de_acceso)
+        saveAuthData(data.token_de_acceso, data.usuario.username)
         return data;
     } catch (error) {
         throw new Error(error);

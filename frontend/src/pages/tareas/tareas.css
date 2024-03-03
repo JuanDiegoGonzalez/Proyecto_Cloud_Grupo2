@@ -130,6 +130,17 @@ body {
     width: 300px;
     height: 300px;
 }
+.no-recomendations{
+
+    font-size: 24px; /* Tamaño de letra grande */
+    color: white; /* Color de texto blanco */
+    position: fixed; /* Posición fija para que esté en la mitad de la pantalla */
+    top: 50%; /* Coloca el elemento en la mitad vertical de la pantalla */
+    left: 50%; /* Coloca el elemento en la mitad horizontal de la pantalla */
+    transform: translate(-50%, -50%); /* Centra el elemento exactamente en el medio */
+
+
+}
 
 .tareas h1 {
     color: #fff;
