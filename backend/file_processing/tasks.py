@@ -31,7 +31,8 @@ def docx_a_pdf(docx_file, pdf_file, id_tarea):
         document = Document(docx_file)
         pdf = crear_pdf()
         for para in document.paragraphs:
-            pdf.cell(200, 10, txt=para.text, ln=True, align='L')
+            text = para.text.encode('latin-1', 'replace').decode('latin-1')
+            pdf.cell(200, 10, txt=text, ln=True, align='L')
         pdf.output(pdf_file)
         actualizar_bd(id_tarea)
 
@@ -66,6 +67,7 @@ def odt_a_pdf(odt_file, pdf_file, id_tarea):
         doc = load(odt_file)
         pdf = crear_pdf()
         for para in doc.getElementsByType(text.P):
-            pdf.cell(200, 10, txt=teletype.extractText(para), ln=True, align='L')
+            pp = teletype.extractText(para).encode('latin-1', 'replace').decode('latin-1')
+            pdf.cell(200, 10, txt=pp, ln=True, align='L')
         pdf.output(pdf_file)
         actualizar_bd(id_tarea)

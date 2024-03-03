@@ -9,4 +9,4 @@ RUN pip install -r requirements.txt
 
 EXPOSE 5000
 
-CMD ["sh", "-c", "exec flask run --host=0.0.0.0"]
+CMD ["sh", "-c", "cd .. && gunicorn --bind 0.0.0.0:5000 backend.app:app"]

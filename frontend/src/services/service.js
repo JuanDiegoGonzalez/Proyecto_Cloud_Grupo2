@@ -3,7 +3,7 @@ import { saveToken, getToken, saveAuthData } from './auth';
 
 const token = getToken(); // Obtiene el token de localStorage
 
-const back = "http://127.0.0.1:5000/api"
+const back = process.env.REACT_APP_BACKEND_HOST
 const login = async (email, password) => {
     try {
         const response = await fetch(back + '/auth/login/', {
@@ -30,6 +30,7 @@ const login = async (email, password) => {
 const signUp = async (username, password, password2, email) => {
     try {
         const response = await fetch(back + '/auth/signup/', {
+            mode: 'cors',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
