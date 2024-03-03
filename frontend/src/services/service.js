@@ -3,7 +3,7 @@ import { saveToken, getToken, saveAuthData } from './auth';
 
 const token = getToken(); // Obtiene el token de localStorage
 
-const back = "http://localhost:5000/api"
+const back = process.env.REACT_APP_BACKEND_HOST
 const login = async (email, password) => {
     try {
         const response = await fetch(back + '/auth/login/', {

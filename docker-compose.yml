@@ -10,12 +10,16 @@ services:
     depends_on:
       - db
       - redis
+    # volumes:
+    #   - ./files/uploaded:/backend/files/uploaded
   
   frontend:
     build:
       context: ./frontend
     ports:
       - "3000:3000"
+    environment:
+      REACT_APP_BACKEND_HOST: "http://localhost:5000"
   
   db:
     restart: always
