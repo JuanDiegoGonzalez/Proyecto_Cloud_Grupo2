@@ -116,8 +116,8 @@ class VistaTarea(Resource):
         tarea = Tarea.query.get_or_404(id_task)
         if str(tarea.status) == "Estado.PROCESSED":
             parts = tarea.fileName.split(".")
-            os.remove(os.path.join("files", "uploaded", str(id_task) + "_" + tarea.fileName))
-            os.remove(os.path.join("files", "processed", str(id_task) + "_" + ".".join(parts[:-1]) + ".pdf"))
+            os.remove(os.path.join("backend","files", "uploaded", str(id_task) + "_" + tarea.fileName))
+            os.remove(os.path.join("backend","files", "processed", str(id_task) + "_" + ".".join(parts[:-1]) + ".pdf"))
             db.session.delete(tarea)
             db.session.commit()
             return 'Operacion exitosa', 204
