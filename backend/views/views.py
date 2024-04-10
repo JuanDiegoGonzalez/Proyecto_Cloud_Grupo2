@@ -73,8 +73,8 @@ class VistaTareas(Resource):
         usuario.tareas.append(nueva_tarea)
         db.session.commit()
 
-        input_path = os.path.join("home", "juandigz115", "remote_folder", "files", "processed", str(nueva_tarea.id) + "_" + file.filename)
-        output_path = os.path.join("home", "juandigz115", "remote_folder", "files", "processed", str(nueva_tarea.id) + "_" + ".".join(parts[:-1]) + ".pdf")
+        input_path = os.path.join(os.getcwd(), "files", "files", "processed", str(nueva_tarea.id) + "_" + file.filename)
+        output_path = os.path.join(os.getcwd(), "files", "files", "processed", str(nueva_tarea.id) + "_" + ".".join(parts[:-1]) + ".pdf")
         file.save(input_path)
 
         match oldFormat:
@@ -117,8 +117,8 @@ class VistaTarea(Resource):
         if str(tarea.status) == "Estado.PROCESSED":
             parts = tarea.fileName.split(".")
             print(os.getcwd())
-            os.remove(os.path.join("home", "juandigz115", "remote_folder", "files", "uploaded", str(id_task) + "_" + tarea.fileName))
-            os.remove(os.path.join("home", "juandigz115", "remote_folder", "files", "processed", str(id_task) + "_" + ".".join(parts[:-1]) + ".pdf"))
+            os.remove(os.path.join(os.getcwd(), "files", "files", "uploaded", str(id_task) + "_" + tarea.fileName))
+            os.remove(os.path.join(os.getcwd(), "files", "files", "processed", str(id_task) + "_" + ".".join(parts[:-1]) + ".pdf"))
             db.session.delete(tarea)
             db.session.commit()
             return 'Operacion exitosa', 204
@@ -137,4 +137,4 @@ class VistaArchivo(Resource):
             return {'error': 'Procesando archivo...'}
         else:
             parts = filename.split(".")
-            return send_file(os.path.join("home", "juandigz115", "remote_folder", "files", "processed", ".".join(parts[:-1]) + ".pdf"), as_attachment=True)
+            return send_file(os.path.join(os.getcwd(), "files", "files", "processed", ".".join(parts[:-1]) + ".pdf"), as_attachment=True)
