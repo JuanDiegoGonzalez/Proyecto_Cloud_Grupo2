@@ -16,7 +16,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      REACT_APP_BACKEND_HOST: "http://34.70.52.172:5000/api"
+      REACT_APP_BACKEND_HOST: "http://34.28.22.49:5000/api"
   
 networks:
   web_net:

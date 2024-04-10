@@ -9,8 +9,8 @@ from odf.opendocument import load
 from sqlalchemy import create_engine
 from sqlalchemy import text as tx
 
-app = Celery('tasks_copy', broker = 'redis://34.31.103.21:6379/0')
-DATABASE_URL = 'postgresql://postgres:password@34.69.226.15:5432/postgres'
+app = Celery('tasks_copy', broker = 'redis://35.232.5.179:6379/0')
+DATABASE_URL = 'postgresql://postgres:password@34.171.227.120:5432/postgres'
 
 def crear_pdf():
     pdf = FPDF()
