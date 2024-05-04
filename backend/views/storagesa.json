@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "entrega3cloud",
+  "private_key_id": "f70bc9fcf72b681b22c6bf94e3bad1f037762575",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDBjF6f9m5hctvl\nwFKcW/V5PHFkegIfZDc5Z2rqgcSfYClu3/lD8i4wqEUyif+/XGFTb7Vu4DuELbEh\nw+9ZlhiuY40/ar5+GdrpY6esqsht+mbUJVhv0I4XuyzjPML+SUBpdMXH2AjmIji1\nyldo5yIyKMuQRWi/1jeBOZV7P4dkbs7zoOsP7r+0wscYtA9c9relpNWaWju5U5+h\ngCXY4bNlaQispCksge0Wm55zY3uunmDtly8Wh8He6lcFMFCCo6T0GXcZhYtlygjk\nMav2FMvWc57vdFDkxmKDw2TfuKtb7sy44QB74efWdy+dUXFRW/oZ7gYdHfbust0N\n1BqVF0O7AgMBAAECggEADrHpe0wFYcO2kLvolHOM8IQCI1FPePJYbl986B+Afg3v\nMg+ySBI1UeoXZY4XC1XoaSJ+9tNH4YdrPqI25Ck3vYHUdxSpMD979fgO19bC+fVR\nj644MovLRgpRjv04MYCpRyMfuHEdbS+lo551wtgNqhub0lvavKSh499V4JzYWuvG\n0Ncvg0BgSd+E+fQLZ5E6dSfYGZ4GmJIwOu28FxqXcECEStTlfzo9muWsKiZIZM0Z\nvCao55LDzQgyAlX69yfHw47jiFGabbCCOH5hEyXDaTGcjqNQvuWIXm7I6x9PCWR6\nyIeGIPPafIRWEOsz2AkMHPnretg73fmWlB8sPMikLQKBgQD6BGG/KkpEYdvmiCJQ\nctxwXZrATlRHS3hGf0twFGehL9r4SKhcDXRmxO9HGO/S5DzH8SbHVdEGnf8MR33M\nn4x4SHM6cCk/GHx0KxXzGkQ7Nex9X5CYPGjt6QmZEW4mFEUwIBabY1uDAvmY+GdM\nmUtHkdpU5s8oJh/k1v3NyRpbhQKBgQDGLg6Twgu2IBsuuaiYpeaN2WaQ8E0Lv18G\nLNlYRJDrtToj8LYzNMt5JB5Hmh9KNNiSHzTm7AH5GMWuTRgIm+yjoM2QluIsAu28\nmH5G7spakujypSuMtaimtWcOokPbwTnxIGS7lz50YP37n/QCEI3QGtC+HLWvhIbm\n8T+Y0IEmPwKBgDAsr/j52R2cDZc6HAKMX1V3c94iObMTI7XRyWNrSxyP8A1vUqGK\nJie3QrPcZjmoqN2N5f761jAEOaTQEblf9N0oeKuF+SyjNzfbJXuWUBdoqIzv4Ri0\nazOMd8D6ztKfjUVcqX5/gp6X8Cg9lQn5b7v2qq85WilOT0707iq82UtRAoGAP0tI\nZpKL8P/yDotHOHGL3/P2GQZWZREaxTsfs1w6uL0ps37WgiYzch5B+XZU1ftoy8ph\nt/raancp85A1w9Ig0uWxoaM+2vWYfipp8jejsyfGdHCiJw+BrLS1FGxopc/htIw2\n/96/GKY9l9avNNWapUNbNcyvjj4SY8HbIPA+vzsCgYB1j743MyfXbdMT2yegUbO4\nA7oCYeEViHzKQ1Xo87gCXHvdPL9IStHk4/gGhOn5M+T6v8qxGU9ggTjvCmdXab/X\njrMZ4AKC2hiVcBeFCcKPTh6QqwxSCRMGneK71ASneeMKqC225N6iCUW1+V471/W1\nGzpjPg9wBGO+iYuYzY7/EQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "filestoresa@entrega3cloud.iam.gserviceaccount.com",
+  "client_id": "112914648998264475344",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/filestoresa%40entrega3cloud.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

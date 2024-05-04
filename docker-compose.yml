@@ -7,6 +7,8 @@ services:
       - web_net
     ports:
       - "5000:5000"
+    depends_on:
+      - redis
     # volumes:
     #   - ./files/uploaded:/backend/files/uploaded
   
@@ -16,7 +18,22 @@ services:
     ports:
       - "3000:3000"
     environment:
-      REACT_APP_BACKEND_HOST: "http://34.28.22.49:5000/api"
+      REACT_APP_BACKEND_HOST: "http://localhost:5000/api"
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+  
+  celery:
+    build:
+      context: ./backend/file_processing
+    command: celery -A tasks worker -l info
+    depends_on:
+      - backend
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379/0
   
 networks:
   web_net:

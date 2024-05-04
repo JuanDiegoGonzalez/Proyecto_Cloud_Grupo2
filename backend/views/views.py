@@ -1,5 +1,6 @@
 from datetime import datetime
 import os
+from gcloud import storage
 import json
 from flask_restful import Resource
 from backend.models.models import Tarea, TareaSchema, Usuario, UsuarioSchema
@@ -10,6 +11,9 @@ from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identi
 from ..file_processing.tasks import docx_a_pdf, pptx_a_pdf, xlsx_a_pdf, odt_a_pdf
 usuario_schema = UsuarioSchema()
 tarea_schema = TareaSchema()
+
+os.environ.setdefault("GCLOUD_PROJECT", "entrega3cloud")
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'storagesa.json'
 
 class VistaSignUp(Resource):
     def post(self):
@@ -73,9 +77,13 @@ class VistaTareas(Resource):
         usuario.tareas.append(nueva_tarea)
         db.session.commit()
 
-        input_path = os.path.join(os.getcwd(), "files", "files", "processed", str(nueva_tarea.id) + "_" + file.filename)
-        output_path = os.path.join(os.getcwd(), "files", "files", "processed", str(nueva_tarea.id) + "_" + ".".join(parts[:-1]) + ".pdf")
-        file.save(input_path)
+        gcs = storage.Client()
+        bucket = gcs.get_bucket("bucketproyecto3cloud")
+        blob = bucket.blob(file.filename)
+        blob.upload_from_file(file)
+
+        input_path = str(nueva_tarea.id) + "_" + file.filename
+        output_path = str(nueva_tarea.id) + "_" + ".".join(parts[:-1]) + ".pdf"
 
         match oldFormat:
             case "docx":
@@ -116,7 +124,6 @@ class VistaTarea(Resource):
         tarea = Tarea.query.get_or_404(id_task)
         if str(tarea.status) == "Estado.PROCESSED":
             parts = tarea.fileName.split(".")
-            print(os.getcwd())
             os.remove(os.path.join(os.getcwd(), "files", "files", "uploaded", str(id_task) + "_" + tarea.fileName))
             os.remove(os.path.join(os.getcwd(), "files", "files", "processed", str(id_task) + "_" + ".".join(parts[:-1]) + ".pdf"))
             db.session.delete(tarea)
