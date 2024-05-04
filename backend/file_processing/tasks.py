@@ -1,4 +1,5 @@
 import os
+from gcloud import storage
 from celery import Celery
 from fpdf import FPDF
 from docx import Document
@@ -8,6 +9,9 @@ from odf import text, teletype
 from odf.opendocument import load
 from sqlalchemy import create_engine
 from sqlalchemy import text as tx
+
+os.environ.setdefault("GCLOUD_PROJECT", "entrega3cloud")
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'storagesa.json'
 
 app = Celery('tasks_copy', broker = 'redis://redis:6379/0')
 DATABASE_URL = 'postgresql://postgres:password@35.232.145.254:5432/postgres'
@@ -27,14 +31,18 @@ def actualizar_bd(id_tarea):
 
 @app.task
 def docx_a_pdf(docx_file, pdf_file, id_tarea):
-    if os.path.exists(docx_file):
-        document = Document(docx_file)
-        pdf = crear_pdf()
-        for para in document.paragraphs:
-            text = para.text.encode('latin-1', 'replace').decode('latin-1')
-            pdf.cell(200, 10, txt=text, ln=True, align='L')
-        pdf.output(pdf_file)
-        actualizar_bd(id_tarea)
+    gcs = storage.Client()
+    bucket = gcs.get_bucket("bucketproyecto3cloud")
+    blob = bucket.blob(docx_file)
+    document = blob.download_as_string()
+
+    pdf = crear_pdf()
+    for para in document.paragraphs:
+        text = para.text.encode('latin-1', 'replace').decode('latin-1')
+        pdf.cell(200, 10, txt=text, ln=True, align='L')
+    blob2 = bucket.blob(pdf_file)
+    blob2.upload_from_file(pdf)
+    actualizar_bd(id_tarea)
 
 @app.task
 def pptx_a_pdf(pptx_file, pdf_file, id_tarea):
