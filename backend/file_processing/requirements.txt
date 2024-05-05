@@ -3,6 +3,7 @@ fpdf==1.7.2
 gcloud==0.18.3
 odfpy==1.4.1
 openpyxl==3.1.2
+psycopg2==2.9.9
 python-docx==1.1.0
 python-pptx==0.6.23
 redis==5.0.1

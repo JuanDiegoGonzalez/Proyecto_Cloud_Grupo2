@@ -12,7 +12,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import text as tx
 
 os.environ.setdefault("GCLOUD_PROJECT", "entrega3cloud")
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/readings/backend/views/storagesa.json'  # TODO: Verificar que el archivo exista en /backend/views/
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/readings/backend/file_processing/storagesa.json'  # TODO: Verificar que el archivo exista en /backend/views/
 
 app = Celery('tasks', broker = 'redis://redis:6379/0')  # TODO: Poner url de la mv?
 DATABASE_URL = 'postgresql://postgres:password@35.232.145.254:5432/postgres'  # BDURL
@@ -30,7 +30,7 @@ def actualizar_bd(id_tarea):
     with engine.begin() as conn:
         conn.execute(tx(query))
 
-@app.task
+@app.task(name='backend.file_processing.docx_a_pdf')
 def docx_a_pdf(docx_file, pdf_file, id_tarea):
     gcs = storage.Client()
     bucket = gcs.get_bucket("bucketproyecto3cloud")
@@ -48,7 +48,7 @@ def docx_a_pdf(docx_file, pdf_file, id_tarea):
     blob_upload.upload_from_string(pdf_bytes, content_type='application/pdf')
     actualizar_bd(id_tarea)
 
-@app.task
+@app.task(name='backend.file_processing.pptx_a_pdf')
 def pptx_a_pdf(pptx_file, pdf_file, id_tarea):
     gcs = storage.Client()
     bucket = gcs.get_bucket("bucketproyecto3cloud")
@@ -67,7 +67,7 @@ def pptx_a_pdf(pptx_file, pdf_file, id_tarea):
     blob_upload.upload_from_string(pdf_bytes, content_type='application/pdf')
     actualizar_bd(id_tarea)
 
-@app.task
+@app.task(name='backend.file_processing.xlsx_a_pdf')
 def xlsx_a_pdf(xlsx_file, pdf_file, id_tarea):
     gcs = storage.Client()
     bucket = gcs.get_bucket("bucketproyecto3cloud")
@@ -87,7 +87,7 @@ def xlsx_a_pdf(xlsx_file, pdf_file, id_tarea):
     blob_upload.upload_from_string(pdf_bytes, content_type='application/pdf')
     actualizar_bd(id_tarea)
 
-@app.task
+@app.task(name='backend.file_processing.odt_a_pdf')
 def odt_a_pdf(odt_file, pdf_file, id_tarea):
     gcs = storage.Client()
     bucket = gcs.get_bucket("bucketproyecto3cloud")

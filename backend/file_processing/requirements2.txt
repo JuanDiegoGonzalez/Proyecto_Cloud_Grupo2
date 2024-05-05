@@ -32,6 +32,7 @@ odfpy==1.4.1
 openpyxl==3.1.2
 pillow==10.2.0
 prompt-toolkit==3.0.28
+psycopg2==2.9.9
 Pygments==2.11.2
 PyJWT==2.3.0
 pyparsing==2.4.7
