@@ -12,7 +12,6 @@ from ..models import db
 from ..auth import auth
 from flask import request, send_file
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
-from ..file_processing.tasks import docx_a_pdf, pptx_a_pdf, xlsx_a_pdf, odt_a_pdf
 usuario_schema = UsuarioSchema()
 tarea_schema = TareaSchema()
 
@@ -89,7 +88,7 @@ class VistaTareas(Resource):
         blob = bucket.blob(input_path)
         blob.upload_from_file(file)
 
-        project_id = "proyectocloud"
+        project_id = "proyectocloud-422409"
         topic_name = "proyecto3pubsub"
 
         publisher = pubsub_v1.PublisherClient()
