@@ -15,18 +15,3 @@ services:
       - "3000:3000"
     environment:
       REACT_APP_BACKEND_HOST: "http://localhost:5000/api"  # TODO: Cambiar por URL del backend (misma maquina? load balancer?)
-
-  redis:
-    image: redis
-    ports:
-      - "6379:6379"
-  
-  celery:
-    build:
-      context: ./backend/file_processing
-    command: celery -A tasks worker -l info
-    depends_on:
-      - backend
-      - redis
-    environment:
-      - REDIS_URL=redis://redis:6379/0  # TODO: cambiar por url de la VM (cada maquina individual?)
