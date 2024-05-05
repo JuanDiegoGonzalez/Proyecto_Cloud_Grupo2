@@ -13,7 +13,7 @@ usuario_schema = UsuarioSchema()
 tarea_schema = TareaSchema()
 
 os.environ.setdefault("GCLOUD_PROJECT", "entrega3cloud")
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'storagesa.json'
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/readings/backend/views/storagesa.json'
 
 class VistaSignUp(Resource):
     def post(self):
@@ -77,13 +77,13 @@ class VistaTareas(Resource):
         usuario.tareas.append(nueva_tarea)
         db.session.commit()
 
-        gcs = storage.Client()
-        bucket = gcs.get_bucket("bucketproyecto3cloud")
-        blob = bucket.blob(file.filename)
-        blob.upload_from_file(file)
-
         input_path = str(nueva_tarea.id) + "_" + file.filename
         output_path = str(nueva_tarea.id) + "_" + ".".join(parts[:-1]) + ".pdf"
+
+        gcs = storage.Client()
+        bucket = gcs.get_bucket("bucketproyecto3cloud")
+        blob = bucket.blob(str(nueva_tarea.id) + "_" + file.filename)
+        blob.upload_from_file(file)
 
         match oldFormat:
             case "docx":

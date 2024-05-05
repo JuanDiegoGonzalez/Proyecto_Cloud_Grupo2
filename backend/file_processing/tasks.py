@@ -11,7 +11,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import text as tx
 
 os.environ.setdefault("GCLOUD_PROJECT", "entrega3cloud")
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'storagesa.json'
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/readings/backend/views/storagesa.json'
 
 app = Celery('tasks_copy', broker = 'redis://redis:6379/0')
 DATABASE_URL = 'postgresql://postgres:password@35.232.145.254:5432/postgres'
