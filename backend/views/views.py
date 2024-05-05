@@ -1,6 +1,9 @@
+from concurrent import futures
 from datetime import datetime
 import os
+from typing import Callable
 from gcloud import storage
+from google.cloud import pubsub_v1
 import json
 import tempfile
 from flask_restful import Resource
@@ -86,18 +89,38 @@ class VistaTareas(Resource):
         blob = bucket.blob(input_path)
         blob.upload_from_file(file)
 
+        project_id = "entrega3cloud"
+        topic_name = "proyecto3pubsub"
+
+        publisher = pubsub_v1.PublisherClient()
+        topic_path = publisher.topic_path(project_id, topic_name)
+
         match oldFormat:
             case "docx":
-                docx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
+                data = f"docx;{input_path};{output_path};{nueva_tarea.id}".encode('utf-8')
+                future = publisher.publish(topic_path, data=data)
+
+                print(f"Published message ID: {future.result()}")
+
+                #docx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
 
             case "pptx":
-                pptx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
+                data = f"pptx;{input_path};{output_path};{nueva_tarea.id}".encode('utf-8')
+                future = publisher.publish(topic_path, data=data)
+
+                #pptx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
 
             case "xlsx":
-                xlsx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
+                data = f"xlsx;{input_path};{output_path};{nueva_tarea.id}".encode('utf-8')
+                future = publisher.publish(topic_path, data=data)
+        
+                #xlsx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
             
             case "odt":
-                odt_a_pdf.delay(input_path, output_path, nueva_tarea.id)
+                data = f"odt;{input_path};{output_path};{nueva_tarea.id}".encode('utf-8')
+                future = publisher.publish(topic_path, data=data)
+
+                #odt_a_pdf.delay(input_path, output_path, nueva_tarea.id)
 
             case _:
                 ...
