@@ -8,4 +8,4 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 RUN apt-get update && apt-get install -y celery
 
-CMD celery -A tasks worker -l info
+CMD celery -A backend.file_processing.tasks worker -l info

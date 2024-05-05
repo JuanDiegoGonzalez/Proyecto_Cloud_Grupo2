@@ -14,7 +14,7 @@ usuario_schema = UsuarioSchema()
 tarea_schema = TareaSchema()
 
 os.environ.setdefault("GCLOUD_PROJECT", "entrega3cloud")
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/readings/backend/views/storagesa.json'
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/readings/backend/views/storagesa.json'  # TODO: Verificar que el archivo exista en /backend/views/
 
 class VistaSignUp(Resource):
     def post(self):
@@ -88,16 +88,16 @@ class VistaTareas(Resource):
 
         match oldFormat:
             case "docx":
-                docx_a_pdf(input_path, output_path, nueva_tarea.id)
+                docx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
 
             case "pptx":
-                pptx_a_pdf(input_path, output_path, nueva_tarea.id)
+                pptx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
 
             case "xlsx":
-                xlsx_a_pdf(input_path, output_path, nueva_tarea.id)
+                xlsx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
             
             case "odt":
-                odt_a_pdf(input_path, output_path, nueva_tarea.id)
+                odt_a_pdf.delay(input_path, output_path, nueva_tarea.id)
 
             case _:
                 ...
