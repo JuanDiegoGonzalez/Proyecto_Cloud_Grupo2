@@ -6,6 +6,7 @@ instance/*
 __pycache__/
 *.py[cod]
 *$py.class
+storagesa.json
 
 
 # Distribution / packaging

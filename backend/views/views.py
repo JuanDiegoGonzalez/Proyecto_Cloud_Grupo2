@@ -1,6 +1,8 @@
 from datetime import datetime
 import os
+from gcloud import storage
 import json
+import tempfile
 from flask_restful import Resource
 from backend.models.models import Tarea, TareaSchema, Usuario, UsuarioSchema
 from ..models import db
@@ -10,6 +12,9 @@ from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identi
 from ..file_processing.tasks import docx_a_pdf, pptx_a_pdf, xlsx_a_pdf, odt_a_pdf
 usuario_schema = UsuarioSchema()
 tarea_schema = TareaSchema()
+
+os.environ.setdefault("GCLOUD_PROJECT", "entrega3cloud")
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/readings/backend/views/storagesa.json'  # TODO: Verificar que el archivo exista en /backend/views/
 
 class VistaSignUp(Resource):
     def post(self):
@@ -73,22 +78,26 @@ class VistaTareas(Resource):
         usuario.tareas.append(nueva_tarea)
         db.session.commit()
 
-        input_path = os.path.join(os.getcwd(), "files", "files", "processed", str(nueva_tarea.id) + "_" + file.filename)
-        output_path = os.path.join(os.getcwd(), "files", "files", "processed", str(nueva_tarea.id) + "_" + ".".join(parts[:-1]) + ".pdf")
-        file.save(input_path)
+        input_path = str(nueva_tarea.id) + "_" + file.filename
+        output_path = str(nueva_tarea.id) + "_" + ".".join(parts[:-1]) + ".pdf"
+
+        gcs = storage.Client()
+        bucket = gcs.get_bucket("bucketproyecto3cloud")
+        blob = bucket.blob(input_path)
+        blob.upload_from_file(file)
 
         match oldFormat:
             case "docx":
-                docx_a_pdf(input_path, output_path, nueva_tarea.id)
+                docx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
 
             case "pptx":
-                pptx_a_pdf(input_path, output_path, nueva_tarea.id)
+                pptx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
 
             case "xlsx":
-                xlsx_a_pdf(input_path, output_path, nueva_tarea.id)
+                xlsx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
             
             case "odt":
-                odt_a_pdf(input_path, output_path, nueva_tarea.id)
+                odt_a_pdf.delay(input_path, output_path, nueva_tarea.id)
 
             case _:
                 ...
@@ -116,9 +125,16 @@ class VistaTarea(Resource):
         tarea = Tarea.query.get_or_404(id_task)
         if str(tarea.status) == "Estado.PROCESSED":
             parts = tarea.fileName.split(".")
-            print(os.getcwd())
-            os.remove(os.path.join(os.getcwd(), "files", "files", "uploaded", str(id_task) + "_" + tarea.fileName))
-            os.remove(os.path.join(os.getcwd(), "files", "files", "processed", str(id_task) + "_" + ".".join(parts[:-1]) + ".pdf"))
+
+            storage_client = storage.Client()
+            bucket = storage_client.bucket("bucketproyecto3cloud")
+
+            blob = bucket.blob(str(id_task) + "_" + tarea.fileName)
+            blob.delete()
+
+            blob = bucket.blob(str(id_task) + "_" + ".".join(parts[:-1]) + ".pdf")
+            blob.delete()
+
             db.session.delete(tarea)
             db.session.commit()
             return 'Operacion exitosa', 204
@@ -129,7 +145,7 @@ class VistaArchivo(Resource):
     def get(self, filename):
         parts = filename.split("_")
         usuario = Usuario.query.filter(Usuario.email == get_jwt_identity()).first()
-        tarea = Tarea.query.filter(Tarea.fileName == "_".join(parts[1:])).first()
+        tarea = Tarea.query.get_or_404(parts[0])
 
         if (tarea is None) or (usuario.id != tarea.id_usuario):
             return 'El archivo no existe', 404
@@ -137,4 +153,15 @@ class VistaArchivo(Resource):
             return {'error': 'Procesando archivo...'}
         else:
             parts = filename.split(".")
-            return send_file(os.path.join(os.getcwd(), "files", "files", "processed", ".".join(parts[:-1]) + ".pdf"), as_attachment=True)
+            name = ".".join(parts[:-1]) + ".pdf"
+
+            gcs = storage.Client()
+            bucket = gcs.get_bucket("bucketproyecto3cloud")
+            blob_download = bucket.blob(name)
+
+            with tempfile.TemporaryDirectory() as temp_dir:
+                temp_file_path = os.path.join(temp_dir, name)
+                blob_download.download_to_filename(temp_file_path)
+
+                mime_type = 'application/pdf'
+                return send_file(temp_file_path, as_attachment=True, mimetype=mime_type, download_name=name)
