@@ -13,10 +13,10 @@ from odf.opendocument import load
 from sqlalchemy import create_engine
 from sqlalchemy import text as tx
 
-os.environ.setdefault("GCLOUD_PROJECT", "entrega3cloud")
+os.environ.setdefault("GCLOUD_PROJECT", "proyectocloud")
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.path.join(os.getcwd(), "backend", "file_processing", 'storagesa.json')  # TODO: Verificar que el archivo exista en /backend/views/
 
-DATABASE_URL = 'postgresql://postgres:password@35.232.145.254:5432/postgres'  # BDURL
+DATABASE_URL = 'postgresql://postgres:password@34.31.55.58:5432/postgres'  # BDURL
 
 def crear_pdf():
     pdf = FPDF()
@@ -33,7 +33,7 @@ def actualizar_bd(id_tarea):
 
 def docx_a_pdf(docx_file, pdf_file, id_tarea):
     gcs = storage.Client()
-    bucket = gcs.get_bucket("bucketproyecto3cloud")
+    bucket = gcs.get_bucket("bucketproyectocloud")
     blob_download = bucket.blob(docx_file)
 
     document = Document(BytesIO(blob_download.download_as_string()))
@@ -50,7 +50,7 @@ def docx_a_pdf(docx_file, pdf_file, id_tarea):
 
 def pptx_a_pdf(pptx_file, pdf_file, id_tarea):
     gcs = storage.Client()
-    bucket = gcs.get_bucket("bucketproyecto3cloud")
+    bucket = gcs.get_bucket("bucketproyectocloud")
     blob_download = bucket.blob(pptx_file)
 
     presentation = Presentation(BytesIO(blob_download.download_as_string()))
@@ -68,7 +68,7 @@ def pptx_a_pdf(pptx_file, pdf_file, id_tarea):
 
 def xlsx_a_pdf(xlsx_file, pdf_file, id_tarea):
     gcs = storage.Client()
-    bucket = gcs.get_bucket("bucketproyecto3cloud")
+    bucket = gcs.get_bucket("bucketproyectocloud")
     blob_download = bucket.blob(xlsx_file)
 
     wb = load_workbook(BytesIO(blob_download.download_as_string()))
@@ -87,7 +87,7 @@ def xlsx_a_pdf(xlsx_file, pdf_file, id_tarea):
 
 def odt_a_pdf(odt_file, pdf_file, id_tarea):
     gcs = storage.Client()
-    bucket = gcs.get_bucket("bucketproyecto3cloud")
+    bucket = gcs.get_bucket("bucketproyectocloud")
     blob_download = bucket.blob(odt_file)
 
     doc = load(BytesIO(blob_download.download_as_string()))
@@ -126,7 +126,7 @@ def callback(message):
             ...
 
 
-project_id = "entrega3cloud"
+project_id = "proyectocloud"
 subscription_name = "proyecto3pubsub-sub"
 
 subscriber = pubsub_v1.SubscriberClient()

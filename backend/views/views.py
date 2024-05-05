@@ -16,7 +16,7 @@ from ..file_processing.tasks import docx_a_pdf, pptx_a_pdf, xlsx_a_pdf, odt_a_pd
 usuario_schema = UsuarioSchema()
 tarea_schema = TareaSchema()
 
-os.environ.setdefault("GCLOUD_PROJECT", "entrega3cloud")
+os.environ.setdefault("GCLOUD_PROJECT", "proyectocloud")
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/readings/backend/views/storagesa.json'  # TODO: Verificar que el archivo exista en /backend/views/
 
 class VistaSignUp(Resource):
@@ -85,11 +85,11 @@ class VistaTareas(Resource):
         output_path = str(nueva_tarea.id) + "_" + ".".join(parts[:-1]) + ".pdf"
 
         gcs = storage.Client()
-        bucket = gcs.get_bucket("bucketproyecto3cloud")
+        bucket = gcs.get_bucket("bucketproyectocloud")
         blob = bucket.blob(input_path)
         blob.upload_from_file(file)
 
-        project_id = "entrega3cloud"
+        project_id = "proyectocloud"
         topic_name = "proyecto3pubsub"
 
         publisher = pubsub_v1.PublisherClient()
@@ -150,7 +150,7 @@ class VistaTarea(Resource):
             parts = tarea.fileName.split(".")
 
             storage_client = storage.Client()
-            bucket = storage_client.bucket("bucketproyecto3cloud")
+            bucket = storage_client.bucket("bucketproyectocloud")
 
             blob = bucket.blob(str(id_task) + "_" + tarea.fileName)
             blob.delete()
@@ -179,7 +179,7 @@ class VistaArchivo(Resource):
             name = ".".join(parts[:-1]) + ".pdf"
 
             gcs = storage.Client()
-            bucket = gcs.get_bucket("bucketproyecto3cloud")
+            bucket = gcs.get_bucket("bucketproyectocloud")
             blob_download = bucket.blob(name)
 
             with tempfile.TemporaryDirectory() as temp_dir:
