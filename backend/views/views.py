@@ -2,6 +2,7 @@ from datetime import datetime
 import os
 from gcloud import storage
 import json
+import tempfile
 from flask_restful import Resource
 from backend.models.models import Tarea, TareaSchema, Usuario, UsuarioSchema
 from ..models import db
@@ -82,7 +83,7 @@ class VistaTareas(Resource):
 
         gcs = storage.Client()
         bucket = gcs.get_bucket("bucketproyecto3cloud")
-        blob = bucket.blob(str(nueva_tarea.id) + "_" + file.filename)
+        blob = bucket.blob(input_path)
         blob.upload_from_file(file)
 
         match oldFormat:
@@ -136,7 +137,7 @@ class VistaArchivo(Resource):
     def get(self, filename):
         parts = filename.split("_")
         usuario = Usuario.query.filter(Usuario.email == get_jwt_identity()).first()
-        tarea = Tarea.query.filter(Tarea.fileName == "_".join(parts[1:])).first()
+        tarea = Tarea.query.get_or_404(parts[0])
 
         if (tarea is None) or (usuario.id != tarea.id_usuario):
             return 'El archivo no existe', 404
@@ -144,4 +145,15 @@ class VistaArchivo(Resource):
             return {'error': 'Procesando archivo...'}
         else:
             parts = filename.split(".")
-            return send_file(os.path.join(os.getcwd(), "files", "files", "processed", ".".join(parts[:-1]) + ".pdf"), as_attachment=True)
+            name = ".".join(parts[:-1]) + ".pdf"
+
+            gcs = storage.Client()
+            bucket = gcs.get_bucket("bucketproyecto3cloud")
+            blob_download = bucket.blob(name)
+
+            with tempfile.TemporaryDirectory() as temp_dir:
+                temp_file_path = os.path.join(temp_dir, name)
+                blob_download.download_to_filename(temp_file_path)
+
+                mime_type = 'application/pdf'
+                return send_file(temp_file_path, as_attachment=True, mimetype=mime_type, download_name=name)
