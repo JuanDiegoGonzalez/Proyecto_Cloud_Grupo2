@@ -125,8 +125,16 @@ class VistaTarea(Resource):
         tarea = Tarea.query.get_or_404(id_task)
         if str(tarea.status) == "Estado.PROCESSED":
             parts = tarea.fileName.split(".")
-            os.remove(os.path.join(os.getcwd(), "files", "files", "uploaded", str(id_task) + "_" + tarea.fileName))
-            os.remove(os.path.join(os.getcwd(), "files", "files", "processed", str(id_task) + "_" + ".".join(parts[:-1]) + ".pdf"))
+
+            storage_client = storage.Client()
+            bucket = storage_client.bucket("bucketproyecto3cloud")
+
+            blob = bucket.blob(str(id_task) + "_" + tarea.fileName)
+            blob.delete()
+
+            blob = bucket.blob(str(id_task) + "_" + ".".join(parts[:-1]) + ".pdf")
+            blob.delete()
+
             db.session.delete(tarea)
             db.session.commit()
             return 'Operacion exitosa', 204
