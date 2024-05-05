@@ -1,6 +1,9 @@
+from concurrent import futures
 from datetime import datetime
 import os
+from typing import Callable
 from gcloud import storage
+from google.cloud import pubsub_v1
 import json
 import tempfile
 from flask_restful import Resource
@@ -9,11 +12,10 @@ from ..models import db
 from ..auth import auth
 from flask import request, send_file
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
-from ..file_processing.tasks import docx_a_pdf, pptx_a_pdf, xlsx_a_pdf, odt_a_pdf
 usuario_schema = UsuarioSchema()
 tarea_schema = TareaSchema()
 
-os.environ.setdefault("GCLOUD_PROJECT", "entrega3cloud")
+os.environ.setdefault("GCLOUD_PROJECT", "proyectocloud")
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/readings/backend/views/storagesa.json'  # TODO: Verificar que el archivo exista en /backend/views/
 
 class VistaSignUp(Resource):
@@ -82,22 +84,42 @@ class VistaTareas(Resource):
         output_path = str(nueva_tarea.id) + "_" + ".".join(parts[:-1]) + ".pdf"
 
         gcs = storage.Client()
-        bucket = gcs.get_bucket("bucketproyecto3cloud")
+        bucket = gcs.get_bucket("bucketproyectocloud")
         blob = bucket.blob(input_path)
         blob.upload_from_file(file)
 
+        project_id = "proyectocloud-422409"
+        topic_name = "proyecto3pubsub"
+
+        publisher = pubsub_v1.PublisherClient()
+        topic_path = publisher.topic_path(project_id, topic_name)
+
         match oldFormat:
             case "docx":
-                docx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
+                data = f"docx;{input_path};{output_path};{nueva_tarea.id}".encode('utf-8')
+                future = publisher.publish(topic_path, data=data)
+
+                print(f"Published message ID: {future.result()}")
+
+                #docx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
 
             case "pptx":
-                pptx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
+                data = f"pptx;{input_path};{output_path};{nueva_tarea.id}".encode('utf-8')
+                future = publisher.publish(topic_path, data=data)
+
+                #pptx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
 
             case "xlsx":
-                xlsx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
+                data = f"xlsx;{input_path};{output_path};{nueva_tarea.id}".encode('utf-8')
+                future = publisher.publish(topic_path, data=data)
+        
+                #xlsx_a_pdf.delay(input_path, output_path, nueva_tarea.id)
             
             case "odt":
-                odt_a_pdf.delay(input_path, output_path, nueva_tarea.id)
+                data = f"odt;{input_path};{output_path};{nueva_tarea.id}".encode('utf-8')
+                future = publisher.publish(topic_path, data=data)
+
+                #odt_a_pdf.delay(input_path, output_path, nueva_tarea.id)
 
             case _:
                 ...
@@ -127,7 +149,7 @@ class VistaTarea(Resource):
             parts = tarea.fileName.split(".")
 
             storage_client = storage.Client()
-            bucket = storage_client.bucket("bucketproyecto3cloud")
+            bucket = storage_client.bucket("bucketproyectocloud")
 
             blob = bucket.blob(str(id_task) + "_" + tarea.fileName)
             blob.delete()
@@ -156,7 +178,7 @@ class VistaArchivo(Resource):
             name = ".".join(parts[:-1]) + ".pdf"
 
             gcs = storage.Client()
-            bucket = gcs.get_bucket("bucketproyecto3cloud")
+            bucket = gcs.get_bucket("bucketproyectocloud")
             blob_download = bucket.blob(name)
 
             with tempfile.TemporaryDirectory() as temp_dir:
